@@ -11,13 +11,13 @@ function App () {
 
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
-    const [sid, setSid] = useState("");
+    const [sid, setSId] = useState("");
     const [data, setData] = useState("{}");
-
-    console.log("call")
+    const [scheduleTaskList, setScheduleTaskList] = useState([]);
+    const [moneyTaskList, setMoneyTaskList] = useState([]);
 
     const store = {
-        id, password, setId, setPassword, sid, setSid, data, setData
+        id, password, setId, setPassword, sid, setSId, data, setData, scheduleTaskList, setScheduleTaskList, moneyTaskList, setMoneyTaskList
     }
 
     return (
@@ -27,7 +27,7 @@ function App () {
                     <div>
                         <Routes>
                             <Route path='/' element={<LoginPage />} />
-                            <Route path='/MainPage' element={<MainPage />} />
+                            <Route path='/Main' element={<MainPage />} />
                             <Route path='/Login' element={<LoginPage />} />
                         </Routes>
                     </div>

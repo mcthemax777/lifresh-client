@@ -4,6 +4,7 @@ import LoginButton from "../components/LoginButton";
 import { AppContext } from '../../App'
 import SendData from "../../api/SendData";
 import MainPage from "./MainPage";
+import {RESPONSE_CODE_SUCCESS} from "../../Defines";
 
 function LoginPage() {
     const store = React.useContext(AppContext)
@@ -13,21 +14,21 @@ function LoginPage() {
     const loginCallback = (response) => {
         const data = response.data;
 
-        if(data.code !== 200)
+        if(data.resultCode !== RESPONSE_CODE_SUCCESS)
         {
-            alert(data.msg);
-            console.log(data.code);
+            alert(data.resultMsg);
+            console.log(data.resultCode);
             return ;
         }
 
         alert("LOGIN");
-        console.log(data.data.sid);
 
         //세션 저장
-        localStorage.setItem("sid", data.data.sid);
+        localStorage.setItem("uid", data.uid);
+        localStorage.setItem("sid", data.sid);
 
         //화면 전환
-        navigate("/MainPage");
+        navigate("/Main");
 
     }
 
@@ -40,19 +41,17 @@ function LoginPage() {
         const password = store.password;
 
         //포맷 체크
-        // if (id === '' || password === '') {
-        //     alert('빈 문자열');
-        //     return;
-        // }
+        if (id === '' || password === '') {
+            alert('빈 문자열');
+            return;
+        }
 
         console.log("id - " + id + ", password - " + password);
-
         // 로딩 화면 시작
 
         SendData("login",
             {
-                api: "login",
-                id: id,
+                userId: id,
                 password: password
             },
             loginCallback,
@@ -64,11 +63,10 @@ function LoginPage() {
 
         const sid = localStorage.getItem("sid");
 
-        console.log(sid);
-
         //세션이 있으면 자동 로그인
         if(sid != null) {
-            navigate('/MainPage');
+            console.log(sid);
+            navigate('/Main');
         }
 
     }, []);

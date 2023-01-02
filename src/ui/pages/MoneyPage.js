@@ -1,23 +1,152 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {AppContext} from "../../App";
+import {useNavigate} from "react-router-dom";
+import SendData from "../../api/SendData";
+import '../../Global.css';
+import AddMoneyTask from "../components/AddMoneyTask";
+import MoneyContent from "../components/MoneyContent";
+import {checkErrorResponse} from "../../Defines";
 
 function MoneyPage() {
+    const store = React.useContext(AppContext)
+    let navigate = useNavigate();
+
+    const [mainCategoryList, setMainCategoryList] = useState([]);
+    const [subCategoryList, setSubCategoryList] = useState([]);
+    const [moneyTaskList, setMoneyTaskList] = useState([]);
+    const [minusMoney, setMinusMoney] = useState(0);
+    const [plusMoney, setPlusMoney] = useState(0);
+
+    const uid = localStorage.getItem("uid");
+    const sid = localStorage.getItem("sid");
+
+    const getMoneyTaskListCallback = (response) => {
+
+        const data = response.data;
+
+        if(checkErrorResponse(data, navigate) === false) {
+            return ;
+        }
+
+        //없애도 될듯 (이 페이지에서 저장함)
+        store.setMoneyTaskList(data.moneyTaskList);
+
+        setMainCategoryList(data.mainCategoryList);
+        setSubCategoryList(data.subCategoryList);
+        setMoneyTaskList(data.moneyTaskList);
+
+        setPlusMoney(0);
+        setMinusMoney(0);
+
+        let pm = 0;
+        let nm = 0;
+
+        for(let i = 0 ; i < data.moneyTaskList.length ; i++) {
+            const money = Number(data.moneyTaskList[i].money);
+
+            if(money > 0) pm += money
+            else nm -= money
+        }
+
+        setPlusMoney(pm);
+        setMinusMoney(nm);
+    }
+
+    const getMoneyTaskListErr = (response) => {
+        console.log("error" + response);
+    }
+
+    const getMoneyTaskList = () =>
+    {
+        SendData("getMoneyTaskList",
+            {
+                uid: uid,
+                sid: sid
+            },
+            getMoneyTaskListCallback,
+            getMoneyTaskListErr
+        );
+    }
+
+    useEffect(() => {
+        getMoneyTaskList();
+    }, []);
+
+    useEffect(() => {
+        console.log("change moneyTaskList!");
+
+    }, [moneyTaskList]);
+
+    const removeMoneyTaskListCallback = (response) => {
+
+        const data = response.data;
+
+        if(checkErrorResponse(data, navigate) === false)
+        {
+            return ;
+        }
+
+        getMoneyTaskList();
+    }
+
+    const removeMoneyTaskListErr = (response) => {
+        console.log("removeMoneyTaskListErr" + response);
+    }
+
+    const removeMoneyTask = (moneyTaskNo) => {
+        console.log("remove - moneyTaskNo : " + moneyTaskNo);
+
+        SendData("removeMoneyTaskList",
+            {
+                uid: uid,
+                sid: sid,
+                moneyTaskNoList: [moneyTaskNo]
+            },
+            removeMoneyTaskListCallback,
+            removeMoneyTaskListErr
+        );
+    }
+
+    const getMainCategoryNameByNo = (mainCategoryNo) => {
+
+        for(let i = 0 ; i < mainCategoryList.length ; i++) {
+            if (Number(mainCategoryList[i].mainCategoryNo) === mainCategoryNo) {
+                return mainCategoryList[i].name;
+            }
+        }
+
+        return "NONE";
+    }
+
+    const getSubCategoryNameByNo = (subCategoryNo) => {
+
+        for(let i = 0 ; i < subCategoryList.length ; i++) {
+            if (Number(subCategoryList[i].subCategoryNo) === subCategoryNo) {
+                return subCategoryList[i].name;
+            }
+        }
+
+        return "NONE";
+    }
+
+    const plusMoneyTaskComponentList = moneyTaskList.map((moneyTask, index) => (
+        moneyTask.money > 0 &&
+        <MoneyContent key={index} moneyTask={moneyTask} mainName={getMainCategoryNameByNo(moneyTask.mainCategoryNo)} subName={getSubCategoryNameByNo(moneyTask.subCategoryNo)} removeFunc={removeMoneyTask}/>
+    ));
+
+    const minusMoneyTaskComponentList = moneyTaskList.map((moneyTask, index) => (
+        moneyTask.money < 0 &&
+        <MoneyContent key={index} moneyTask={moneyTask} mainName={getMainCategoryNameByNo(moneyTask.mainCategoryNo)} subName={getSubCategoryNameByNo(moneyTask.subCategoryNo)} removeFunc={removeMoneyTask}/>
+    ));
+
     return(
         <div>
-            <h2>MoneyPage</h2>
-            <div>
-                <table className='listTable'>
-                    <tbody>
-                    <tr>
-                        <td className='listTableIndex th'>index</td>
-                        <td className='listTableTitle th'>title</td>
-                    </tr>
-                    <tr>
-                        <td className='listTableIndex'></td>
-                        <td className='listTableTitle noData'>작성된 글이 없습니다.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <h2>가계부</h2>
+            <h3> 총 지출 : {minusMoney}원</h3>
+            {minusMoneyTaskComponentList}
+            <h3> 총 수입 : {plusMoney}원</h3>
+            {plusMoneyTaskComponentList}
+            <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyTask>
         </div>
     )
 }
