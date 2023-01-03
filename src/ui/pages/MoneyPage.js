@@ -6,6 +6,7 @@ import '../../Global.css';
 import AddMoneyTask from "../components/AddMoneyTask";
 import MoneyContent from "../components/MoneyContent";
 import {checkErrorResponse} from "../../Defines";
+import AddMoneyCategory from "../components/AddMoneyCategory";
 
 function MoneyPage() {
     const store = React.useContext(AppContext)
@@ -147,6 +148,7 @@ function MoneyPage() {
             <h3> 총 수입 : {plusMoney}원</h3>
             {plusMoneyTaskComponentList}
             <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyTask>
+            <AddMoneyCategory mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyCategory>
         </div>
     )
 }
