@@ -7,6 +7,7 @@ import AddMoneyTask from "../components/AddMoneyTask";
 import MoneyContent from "../components/MoneyContent";
 import {checkErrorResponse} from "../../Defines";
 import AddMoneyCategory from "../components/AddMoneyCategory";
+import css from "./MoneyPage.module.css";
 
 function MoneyPage() {
     const store = React.useContext(AppContext)
@@ -141,15 +142,38 @@ function MoneyPage() {
     ));
 
     return(
-        <div>
-            <h2>가계부</h2>
-            <h3> 총 지출 : {minusMoney}원</h3>
-            {minusMoneyTaskComponentList}
-            <h3> 총 수입 : {plusMoney}원</h3>
-            {plusMoneyTaskComponentList}
-            <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyTask>
-            <AddMoneyCategory mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyCategory>
+        <div id="scheduleDiv">
+            <div id="daySchedule" className={css.daySchedule}>
+                <div id="dayScheduleTimeScroll" className={css.dayScheduleTimeScroll}>
+                    <div id="dayScheduleTime" className={css.dayScheduleTime}>
+                        <div id="dayScheduleTimeSide" className={css.dayScheduleTimeSide}>
+                        </div>
+                        <div id="dayScheduleTimeMain" className={css.dayScheduleTimeMain}>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="dayScheduleTask" className={css.dayScheduleTask}>
+
+                </div>
+            </div>
+            <div id="weekSchedule" className={css.weekSchedule}></div>
+            <div id="monthSchedule" className={css.monthSchedule}>
+                <div id="monthScheduleCalendar" className={css.monthScheduleCalendar}>
+                </div>
+            </div>
+            <div id="yearSchedule" className={css.yearSchedule}></div>
         </div>
+        //
+        // <div>
+        //     <h2>가계부</h2>
+        //     <h3> 총 지출 : {minusMoney}원</h3>
+        //     {minusMoneyTaskComponentList}
+        //     <h3> 총 수입 : {plusMoney}원</h3>
+        //     {plusMoneyTaskComponentList}
+        //     <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyTask>
+        //     <AddMoneyCategory mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyCategory>
+        // </div>
     )
 }
 

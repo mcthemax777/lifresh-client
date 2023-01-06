@@ -1,0 +1,138 @@
+
+.daySchedule {
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 1200px) {
+    #dayScheduleTimeScroll {
+        display: inline-block;
+        float: left;
+        width: calc(100% - 700px);
+        overflow:scroll;
+        height:100%;
+        background-color: antiquewhite;
+    }
+
+    #dayScheduleTask {
+        display: inline-block;
+        float: left;
+        width: 700px;
+        height: 100%;
+        background-color: whitesmoke;
+    }
+}
+
+@media (max-width: 1200px) {
+    #dayScheduleTimeScroll {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        height: 100%;
+        background-color: antiquewhite;
+    }
+
+    #dayScheduleTask {
+        display: inline-block;
+        float: left;
+        width: 60%;
+        height: 100%;
+        background-color: whitesmoke;
+    }
+}
+
+#dayScheduleTime {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    height: 2400px;
+    background-color: #e31b20;
+}
+
+
+#dayScheduleTimeSide {
+    position: relative;
+    display: inline-block;
+    float: left;
+    width: 100px;
+    height: 100%;
+    background-color: white;
+}
+
+#dayScheduleTimeMain {
+    position: relative;
+    display: inline-block;
+    float: left;
+    width: calc(100% - 100px);
+    height: 100%;
+    background-color: antiquewhite;
+}
+
+.dayScheduleTimeSideText {
+    position: absolute;
+    text-align: right;
+    right: 10px;
+    width: 100%;
+    font-size: 10px;
+    color: gray;
+    opacity:0.5;
+}
+
+.moneyTimeSideText {
+    position: absolute;
+    text-align: right;
+    right: 10px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.dayScheduleTimeMainSpan {
+    position: absolute;
+    border-top: 1px solid darkgray;
+    width: 100%;
+}
+
+.moneyTimeMainSpan {
+    position: absolute;
+    border-top: 10px solid darkgray;
+    width: 100%;
+}
+
+.dayScheduleTimeMainSpanDot {
+    position: absolute;
+    border-top: 1px dotted darkgray;
+    width: 100%;
+}
+
+#monthSchedule {
+    width: 100%;
+    height: 100%;
+}
+
+#monthScheduleCalendar {
+    width: 100%;
+    height: 100%;
+}
+
+.monthScheduleBlankDay {
+    display: inline-block;
+    width: 14.28571428571428%;
+    height: 200px;
+    background: black;
+}
+
+.monthScheduleDay {
+    display: inline-block;
+    width: 14.28571428571428%;
+    height: 200px;
+    background: lightgray;
+}
+
+.dateBoard div {
+    color: #222;
+    font-weight: bold;
+    min-height: 6rem;
+    padding: .6rem .8rem;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}

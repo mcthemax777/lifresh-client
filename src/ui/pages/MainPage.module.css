@@ -1,0 +1,6 @@
+
+.plannerContent {
+    width: 100%;
+    height: calc(100% - 150px);
+    background-color: aliceblue;
+}

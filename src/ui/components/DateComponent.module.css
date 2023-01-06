@@ -1,0 +1,52 @@
+*{padding:0;margin:0}
+
+.dateDiv {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 50px;
+}
+
+.datePrev {
+  display: inline-block;
+  position: absolute;
+  float: left;
+  left: calc(50% - 100px);
+  top:50%;
+  transform: translate(-50%,-50%);
+  border: 0;
+  background-color: white;
+}
+
+.dateNext {
+  display: inline-block;
+  position: absolute;
+  float: right;
+  left: calc(50% + 100px);
+  top:50%;
+  transform: translate(-50%,-50%);
+  border: 0;
+  background-color: white;
+}
+
+.currentDate {
+  position: absolute;
+  float: left;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  /*display: inline-block;*/
+  /*width: 60%;*/
+  /*height: 50px;*/
+}
+
+.periodMenu {
+  display: inline-block;
+  position: absolute;
+  float: right;
+  left: calc(100% - 70px);
+  top:50%;
+  transform: translate(-50%,-50%);
+  border: 0;
+  background-color: white;
+}

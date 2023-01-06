@@ -1,6 +1,16 @@
 import {useNavigate} from "react-router-dom";
 import LoginPage from './ui/pages/LoginPage';
 
+export const PAGE_TYPE_SCHEDULE = 0;
+export const PAGE_TYPE_DO_TO = 1;
+export const PAGE_TYPE_MONEY = 2;
+export const PAGE_TYPE_SETTING = 3;
+
+export const PERIOD_TYPE_DAY = 0;
+export const PERIOD_TYPE_WEEK = 1;
+export const PERIOD_TYPE_MONTH = 2;
+export const PERIOD_TYPE_YEAR = 3;
+
 
 export const RESPONSE_CODE_SUCCESS = 100;
 export const RESPONSE_CODE_INVALID_SESSION = 201;

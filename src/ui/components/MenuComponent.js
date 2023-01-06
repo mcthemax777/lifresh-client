@@ -1,21 +1,15 @@
 import React from 'react';
-
+import css from "./MenuComponent.module.css";
 function MenuComponent(props) {
 
     return(
-        <div>
-            <button onClick={() => props.onClick1(0)}>
-                일정관리
-            </button>
-            <button onClick={() => props.onClick1(1)}>
-                해야할일
-            </button>
-            <button onClick={() => props.onClick1(2)}>
-                가계부
-            </button>
-            <button onClick={() => props.onClick1(3)}>
-                설정
-            </button>
+        <div id="categoryMenu" className={css.categoryMenu}>
+            <button id="scheduleCategoryBtn" className={css.categoryBtn} onClick={() => props.clickCategoryBtn(0)}
+                    value="일정">일정</button>
+            <button id="todoCategoryBtn" className={css.categoryBtn} onClick={() => props.clickCategoryBtn(1)}
+                    value="체크리스트">체크리스트</button>
+            <button id="moneyCategoryBtn" className={css.categoryBtn} onClick={() => props.clickCategoryBtn(2)}
+                    value="가계부">가계부</button>
         </div>
     )
 }

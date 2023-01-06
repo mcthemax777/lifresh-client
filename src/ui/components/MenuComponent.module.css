@@ -1,0 +1,16 @@
+*{padding:0;margin:0}
+
+.categoryMenu {
+  display: block;
+  height: 50px;
+}
+
+.categoryBtn {
+  display: inline-block;
+  float: left;
+  text-align: center;
+  width: 33.3333%;
+  height: 100%;
+  border: 0;
+  background-color: darkgray;
+}
