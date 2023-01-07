@@ -1,0 +1,143 @@
+
+.dayMoney {
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 1000px) {
+    .dayMoneyTimeScroll {
+        float: left;
+        width: calc(100% - 500px);
+        height: 100%;
+        overflow:scroll;
+        background-color: antiquewhite;
+    }
+
+    .dayMoneyTask {
+        float: left;
+        width: 500px;
+        height: 100%;
+        background-color: whitesmoke;
+    }
+}
+
+@media (max-width: 1000px) {
+    .dayMoneyTimeScroll {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        height: 100%;
+        background-color: antiquewhite;
+    }
+
+    .dayMoneyTask {
+        display: inline-block;
+        float: left;
+        width: 60%;
+        height: 0;
+        background-color: whitesmoke;
+    }
+}
+
+.dayMoneyTime {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    height: 2400px;
+    background-color: white;
+}
+
+
+.dayMoneyTimeSide {
+    position: relative;
+    display: inline-block;
+    float: left;
+    width: 50px;
+    height: 100%;
+    background-color: white;
+}
+
+.dayMoneyTimeMain {
+    position: relative;
+    display: inline-block;
+    float: left;
+    width: calc(100% - 100px);
+    height: 100%;
+    background-color: antiquewhite;
+}
+
+.dayMoneyTimeSideText {
+    position: absolute;
+    text-align: right;
+    right: 10px;
+    width: 100%;
+    font-size: 10px;
+    color: gray;
+    opacity:0.5;
+}
+
+.moneyTimeSideText {
+    position: absolute;
+    text-align: right;
+    right: 10px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.dayMoneyTimeMainSpan {
+    position: absolute;
+    border-top: 1px solid darkgray;
+    left: 0;
+    width: 100%;
+    height: 0;
+}
+
+.moneyTaskDiv {
+    position: absolute;
+    left: 0;
+    width: calc(100% - 10px);
+    text-align: left;
+    padding-left: 10px;
+    font-size: 10px;
+}
+
+.dayMoneyTimeMainSpanDot {
+    position: absolute;
+    border-top: 1px dotted darkgray;
+    left: 0;
+    width: 100%;
+    height: 0;
+}
+
+.monthMoney {
+    width: 100%;
+    height: 100%;
+}
+
+.monthMoneyCalendar {
+    width: 100%;
+    height: 100%;
+}
+
+.monthMoneyBlankDay {
+    display: inline-block;
+    width: 14.28571428571428%;
+    height: 200px;
+    background: black;
+}
+
+.monthMoneyDay {
+    display: inline-block;
+    width: 14.28571428571428%;
+    height: 200px;
+    background: lightgray;
+}
+
+.dateBoard div {
+    color: #222;
+    font-weight: bold;
+    min-height: 6rem;
+    padding: .6rem .8rem;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}

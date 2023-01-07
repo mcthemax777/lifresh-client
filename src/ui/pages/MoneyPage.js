@@ -3,13 +3,22 @@ import {AppContext} from "../../App";
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
 import '../../Global.css';
-import AddMoneyTask from "../components/AddMoneyTask";
 import MoneyContent from "../components/MoneyContent";
-import {checkErrorResponse} from "../../Defines";
-import AddMoneyCategory from "../components/AddMoneyCategory";
+import {
+    checkErrorResponse, checkIsMonth,
+    checkIsToday,
+    PERIOD_TYPE_DAY,
+    PERIOD_TYPE_MONTH,
+    PERIOD_TYPE_WEEK,
+    PERIOD_TYPE_YEAR
+} from "../../Defines";
 import css from "./MoneyPage.module.css";
+import MoneyDayComponent from "../components/MoneyDayComponent";
+import MoneyYearComponent from "../components/MoneyYearComponent";
+import MoneyWeekComponent from "../components/MoneyWeekComponent";
+import MoneyMonthComponent from "../components/MoneyMonthComponent";
 
-function MoneyPage() {
+function MoneyPage(props) {
     const store = React.useContext(AppContext)
     let navigate = useNavigate();
 
@@ -37,21 +46,7 @@ function MoneyPage() {
         setSubCategoryList(data.subCategoryList);
         setMoneyTaskList(data.moneyTaskList);
 
-        setPlusMoney(0);
-        setMinusMoney(0);
-
-        let pm = 0;
-        let nm = 0;
-
-        for(let i = 0 ; i < data.moneyTaskList.length ; i++) {
-            const money = Number(data.moneyTaskList[i].money);
-
-            if(money > 0) pm += money
-            else nm -= money
-        }
-
-        setPlusMoney(pm);
-        setMinusMoney(nm);
+        setTotalMoney(data.moneyTaskList);
     }
 
     const getMoneyTaskListErr = (response) => {
@@ -74,10 +69,39 @@ function MoneyPage() {
         getMoneyTaskList();
     }, []);
 
-    useEffect(() => {
-        console.log("change moneyTaskList!");
+    const setTotalMoney = (moneyTaskList) => {
 
-    }, [moneyTaskList]);
+        let resultPlusMoney = 0;
+        let resultMinusMoney = 0;
+
+        for(let i = 0 ; i < moneyTaskList.length; i++) {
+            console.log("setTotalMoney1");
+
+            const moneyTask = moneyTaskList[i];
+            const taskStartTime = new Date(moneyTask.startTime);
+
+            if((props.periodType === PERIOD_TYPE_DAY && checkIsToday(props.today, taskStartTime) === false) ||
+                (props.periodType === PERIOD_TYPE_WEEK && checkIsToday(props.today, taskStartTime) === false) ||
+                (props.periodType === PERIOD_TYPE_MONTH && checkIsMonth(props.today, taskStartTime) === false) ||
+                (props.periodType === PERIOD_TYPE_YEAR && checkIsToday(props.today, taskStartTime) === false)) {
+                console.log(moneyTask);
+                continue;
+            }
+            console.log("setTotalMoney2");
+
+            if(moneyTaskList[i].money > 0) resultPlusMoney += moneyTaskList[i].money;
+            else resultMinusMoney += moneyTaskList[i].money;
+        }
+
+        setPlusMoney(resultPlusMoney);
+        setMinusMoney(resultMinusMoney);
+    }
+
+    useEffect(() => {
+
+        setTotalMoney(moneyTaskList);
+
+    }, [props.today, props.periodType]);
 
     const removeMoneyTaskListCallback = (response) => {
 
@@ -141,29 +165,22 @@ function MoneyPage() {
         <MoneyContent key={index} moneyTask={moneyTask} mainName={getMainCategoryNameByNo(moneyTask.mainCategoryNo)} subName={getSubCategoryNameByNo(moneyTask.subCategoryNo)} removeFunc={removeMoneyTask}/>
     ));
 
+
+
     return(
-        <div id="scheduleDiv">
-            <div id="daySchedule" className={css.daySchedule}>
-                <div id="dayScheduleTimeScroll" className={css.dayScheduleTimeScroll}>
-                    <div id="dayScheduleTime" className={css.dayScheduleTime}>
-                        <div id="dayScheduleTimeSide" className={css.dayScheduleTimeSide}>
-                        </div>
-                        <div id="dayScheduleTimeMain" className={css.dayScheduleTimeMain}>
-
-                        </div>
-                    </div>
-                </div>
-                <div id="dayScheduleTask" className={css.dayScheduleTask}>
-
-                </div>
+        <div id="moneyDiv" className={css.moneyDiv}>
+            <div id="moneySumDiv" className={css.moneySumDiv}>
+                {/*<div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
+                <div id="plusMoneyDiv" className={css.plusMoneyDiv}> 수입 : {plusMoney}원</div>
+                <div id="minusMoneyDiv" className={css.minusMoneyDiv}> 지출 : {minusMoney}원</div>
             </div>
-            <div id="weekSchedule" className={css.weekSchedule}></div>
-            <div id="monthSchedule" className={css.monthSchedule}>
-                <div id="monthScheduleCalendar" className={css.monthScheduleCalendar}>
-                </div>
+            <div  className={css.plannerContent}>
+                {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList} getSubCategoryNameByNo={getSubCategoryNameByNo}/> }
+                {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
+                {props.periodType === PERIOD_TYPE_MONTH && <MoneyMonthComponent className={css.daySchedule} moneyTaskList={moneyTaskList} today={props.today}/> }
+                {props.periodType === PERIOD_TYPE_YEAR && <MoneyYearComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
             </div>
-            <div id="yearSchedule" className={css.yearSchedule}></div>
-        </div>
+       </div>
         //
         // <div>
         //     <h2>가계부</h2>

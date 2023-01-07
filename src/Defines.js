@@ -11,6 +11,16 @@ export const PERIOD_TYPE_WEEK = 1;
 export const PERIOD_TYPE_MONTH = 2;
 export const PERIOD_TYPE_YEAR = 3;
 
+export const checkIsToday = (today, startTime) => {
+    return today.getFullYear() === startTime.getFullYear() &&
+        today.getMonth() === startTime.getMonth() &&
+        today.getDay() === startTime.getDay();
+}
+
+export const checkIsMonth = (today, startTime) => {
+    return today.getFullYear() === startTime.getFullYear() &&
+        today.getMonth() === startTime.getMonth();
+}
 
 export const RESPONSE_CODE_SUCCESS = 100;
 export const RESPONSE_CODE_INVALID_SESSION = 201;

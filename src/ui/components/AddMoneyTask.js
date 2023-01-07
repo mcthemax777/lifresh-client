@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import DayPlanContent from "./DayPlanContent";
-import {AppContext} from "../../App";
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
-import LoginButton from "./LoginButton";
 import '../../Global.css';
 import {checkErrorResponse, convertDateTimeLocalToTime, currentTime, isNumeric} from "../../Defines";
-import MoneyContent from "./MoneyContent";
+import css from './AddMoneyTask.module.css'
 
 var addTaskBtnPath = "img/add_task_btn.png";
 
@@ -148,42 +145,35 @@ function AddMoneyTask(props) {
 
 
     return(
-        <div className='addScheduleTask'>
+        <div className={css.addMoneyTaskDiv}>
             <h2>추가</h2>
-            <table className='listTable'>
-                <tbody>
-                <tr>
-                    <td className='listTableIndex th'><input id='money' type='text'/></td>
-                    <td className='listTableTitle th'>
-                        <select id='pmSelect'><option value='1'>{plusMoney}</option><option value='2'>{minusMoney}</option></select>
-                    </td>
-                    <td className='listTableTitle th'>
-                        <select onChange={handleMainCategorySelect} id="mainCategorySelect">
-                            <option value='0'>=== 선택 ===</option>
-                            {
-                                props.mainCategoryList.map((mainCategory, index) => (
-                                    <option key={index} value={mainCategory.mainCategoryNo}>{mainCategory.name}</option>
-                                ))
-                            }
-                        </select>
-                    </td>
-                    <td className='listTableTitle th'>
-                        <select onChange={handleSubCategorySelect} id="subCategorySelect">
-                            <option value='0'>=== 선택 ===</option>
-                            {
-                                props.subCategoryList.map((subCategory, index) => (
-                                    Number(selectedMainCategoryNo) === Number(subCategory.mainCategoryNo) &&
-                                    <option key={index} value={subCategory.subCategoryNo}>{subCategory.name}</option>
-                                ))
-                            }
-                        </select>
-                    </td>
-                    <td className='listTableIndex th'><input id='dateTime' type='datetime-local'/></td>
-                    <td className='listTableIndex th'><input id='detail' type='text'/></td>
-                    <td><button onClick={addMoneyTask}>등록</button></td>
-                </tr>
-                </tbody>
-            </table>
+            <div className={css.addMoneyTaskContent}> 금액 : <input id='money' type='text' className={css.addMoneyTaskContent1}/></div>
+            <div className={css.addMoneyTaskContent}> 타입 : <select id='pmSelect' className={css.addMoneyTaskContent1}><option value='1'>{plusMoney}</option><option value='2'>{minusMoney}</option></select></div>
+            <div className={css.addMoneyTaskContent}> 대분류 :
+                <select onChange={handleMainCategorySelect} id="mainCategorySelect" className={css.addMoneyTaskContent1}>
+                    <option value='0'>=== 선택 ===</option>
+                    {
+                        props.mainCategoryList.map((mainCategory, index) => (
+                            <option key={index} value={mainCategory.mainCategoryNo}>{mainCategory.name}</option>
+                        ))
+                    }
+                </select>
+            </div>
+            <div className={css.addMoneyTaskContent}> 중분류 :
+                <select onChange={handleSubCategorySelect} id="subCategorySelect" className={css.addMoneyTaskContent1}>
+                    <option value='0'>=== 선택 ===</option>
+                    {
+                        props.subCategoryList.map((subCategory, index) => (
+                            Number(selectedMainCategoryNo) === Number(subCategory.mainCategoryNo) &&
+                            <option key={index} value={subCategory.subCategoryNo}>{subCategory.name}</option>
+                        ))
+                    }
+                </select>
+            </div>
+            <div className={css.addMoneyTaskContent}> 사용날짜 : <input id='dateTime' type='datetime-local' className={css.addMoneyTaskContent1}/></div>
+            <div className={css.addMoneyTaskContent}> 설명 : <input id='detail' type='text' className={css.addMoneyTaskContent1}/></div>
+            <button  className={css.addMoneyTaskContent} onClick={addMoneyTask}>등록</button>
+
             <br/>
             <br/>
         </div>

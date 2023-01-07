@@ -24,7 +24,7 @@ function App () {
         <AppContext.Provider value={store}>
             <div className="App">
                 <Router>
-                    <div>
+                    <div className="defaultReactDiv">
                         <Routes>
                             <Route path='/' element={<LoginPage />} />
                             <Route path='/Main' element={<MainPage />} />

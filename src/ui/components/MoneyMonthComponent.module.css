@@ -1,0 +1,46 @@
+
+.dayMoney {
+    width: 100%;
+    height: 100%;
+}
+
+.moneyCalendar {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow:scroll;
+    flex-direction: column;
+}
+
+.monthMoneyWeek {
+    display: flex;
+    width: 100%;
+    height: 200px;
+}
+
+.monthMoneyBlankDay {
+    display: flex;
+    flex: 1;
+    height: 200px;
+    background: lightgray;
+    flex-direction: column;
+    border: 1px solid white;
+    padding: 10px;
+    text-align: left;
+}
+
+.monthMoneyDay {
+    display: flex;
+    flex: 1;
+    height: 200px;
+    background: whitesmoke;
+    flex-direction: column;
+    border: 1px solid white;
+    padding: 10px;
+    text-align: left;
+}
+
+.dayTextDiv {
+    display: flex;
+    font-size: 13px;
+}

@@ -40,17 +40,22 @@ function DateComponent(props) {
     }, [props.today, props.periodType]);
 
     return(
-        <div id="dateDiv" className={css.dateDiv}>
-            <input type="button" id="datePrev" className={css.datePrev} onClick={() => props.clickChangeCurrentDateBtn(-1)} value="<"/>
-            <div ref={currentDate} className={css.currentDate}></div>
-            <input type="button" className={css.dateNext} onClick={() => props.clickChangeCurrentDateBtn(1)} value=">"/>
-
-            <label htmlFor="periodMenu"></label><select id="periodMenu" className={css.periodMenu} onChange={props.clickPeriodBtn} >
-            <option id="dayScheduleBtn" value="0">일일</option>
-            <option id="weekScheduleBtn" value="1">주간</option>
-            <option id="monthScheduleBtn" value="2">월간</option>
-            <option id="yearScheduleBtn" value="3">연간</option>
-        </select>
+        <div id="componentDiv" className={css.componentDiv}>
+            <button className={css.menuDiv} value="MENU">MENU</button>
+            <div id="dateDiv" className={css.dateDiv}>
+                <input type="button" id="datePrev" className={css.datePrev} onClick={() => props.clickChangeCurrentDateBtn(-1)} value="<"/>
+                <div ref={currentDate} className={css.currentDate}></div>
+                <input type="button" className={css.dateNext} onClick={() => props.clickChangeCurrentDateBtn(1)} value=">"/>
+            </div>
+            <div className={css.periodMenu}>
+                <label htmlFor="periodMenu"></label>
+                <select id="periodMenu" className={css.periodSelect} onChange={props.clickPeriodBtn} >
+                    <option id="dayScheduleBtn" value="0">일일</option>
+                    <option id="weekScheduleBtn" value="1">주간</option>
+                    <option id="monthScheduleBtn" value="2">월간</option>
+                    <option id="yearScheduleBtn" value="3">연간</option>
+                </select>
+            </div>
         </div>
     )
 }

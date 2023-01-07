@@ -35,7 +35,7 @@ function MainPage() {
 
     const clickChangeCurrentDateBtn = (num) => {
 
-        let newDate = new Date();
+        let newDate = new Date(today);
 
         if(periodType === PERIOD_TYPE_DAY) newDate.setDate(today.getDate() + num);
         else if(periodType === PERIOD_TYPE_WEEK) newDate.setDate(today.getDate() + (num * 7));
@@ -59,13 +59,13 @@ function MainPage() {
     }, [store.data]);
 
     return(
-        <div>
+        <div className="defaultReactDiv">
             <MenuComponent clickCategoryBtn={clickCategoryBtn}></MenuComponent>
             <DateComponent today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>
             <div className={css.plannerContent}>
-                { pageType === PAGE_TYPE_SCHEDULE && <SchedulePage today={today}></SchedulePage> }
-                { pageType === PAGE_TYPE_DO_TO && <ToDoPage today={today}></ToDoPage> }
-                { pageType === PAGE_TYPE_MONEY && <MoneyPage today={today}></MoneyPage> }
+                { pageType === PAGE_TYPE_SCHEDULE && <SchedulePage today={today} periodType={periodType}></SchedulePage> }
+                { pageType === PAGE_TYPE_DO_TO && <ToDoPage today={today} periodType={periodType}></ToDoPage> }
+                { pageType === PAGE_TYPE_MONEY && <MoneyPage today={today} periodType={periodType}></MoneyPage> }
                 { pageType === PAGE_TYPE_SETTING && <SettingPage></SettingPage> }
             </div>
         </div>

@@ -1,16 +1,16 @@
 *{padding:0;margin:0}
 
 .categoryMenu {
-  display: block;
+  display: flex;
+  justify-content: space-around;
   height: 50px;
 }
 
 .categoryBtn {
-  display: inline-block;
-  float: left;
-  text-align: center;
-  width: 33.3333%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100%;
+  flex: 1;
   border: 0;
-  background-color: darkgray;
 }
