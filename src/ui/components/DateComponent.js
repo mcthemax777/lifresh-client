@@ -51,9 +51,9 @@ function DateComponent(props) {
                 <label htmlFor="periodMenu"></label>
                 <select id="periodMenu" className={css.periodSelect} onChange={props.clickPeriodBtn} >
                     <option id="dayScheduleBtn" value="0">일일</option>
-                    <option id="weekScheduleBtn" value="1">주간</option>
+                    {/*<option id="weekScheduleBtn" value="1">주간</option>*/}
                     <option id="monthScheduleBtn" value="2">월간</option>
-                    <option id="yearScheduleBtn" value="3">연간</option>
+                    {/*<option id="yearScheduleBtn" value="3">연간</option>*/}
                 </select>
             </div>
         </div>

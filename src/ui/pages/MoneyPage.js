@@ -39,8 +39,15 @@ function MoneyPage(props) {
             return ;
         }
 
+        //정렬하기
+        data.moneyTaskList.sort(function(a, b)  {
+            if(a.startTime > b.startTime) return 1;
+            if(a.startTime === b.startTime) return 0;
+            if(a.startTime < b.startTime) return -1;
+        });
+
         //없애도 될듯 (이 페이지에서 저장함)
-        store.setMoneyTaskList(data.moneyTaskList);
+        // store.setMoneyTaskList(data.moneyTaskList);
 
         setMainCategoryList(data.mainCategoryList);
         setSubCategoryList(data.subCategoryList);
@@ -75,7 +82,6 @@ function MoneyPage(props) {
         let resultMinusMoney = 0;
 
         for(let i = 0 ; i < moneyTaskList.length; i++) {
-            console.log("setTotalMoney1");
 
             const moneyTask = moneyTaskList[i];
             const taskStartTime = new Date(moneyTask.startTime);
@@ -84,10 +90,8 @@ function MoneyPage(props) {
                 (props.periodType === PERIOD_TYPE_WEEK && checkIsToday(props.today, taskStartTime) === false) ||
                 (props.periodType === PERIOD_TYPE_MONTH && checkIsMonth(props.today, taskStartTime) === false) ||
                 (props.periodType === PERIOD_TYPE_YEAR && checkIsToday(props.today, taskStartTime) === false)) {
-                console.log(moneyTask);
                 continue;
             }
-            console.log("setTotalMoney2");
 
             if(moneyTaskList[i].money > 0) resultPlusMoney += moneyTaskList[i].money;
             else resultMinusMoney += moneyTaskList[i].money;

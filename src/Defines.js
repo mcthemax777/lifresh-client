@@ -14,12 +14,18 @@ export const PERIOD_TYPE_YEAR = 3;
 export const checkIsToday = (today, startTime) => {
     return today.getFullYear() === startTime.getFullYear() &&
         today.getMonth() === startTime.getMonth() &&
-        today.getDay() === startTime.getDay();
+        today.getDate() === startTime.getDate();
 }
 
 export const checkIsMonth = (today, startTime) => {
     return today.getFullYear() === startTime.getFullYear() &&
         today.getMonth() === startTime.getMonth();
+}
+
+// eslint-disable-next-line no-extend-native
+Date.prototype.addSeconds = function(s) {
+    this.setTime(this.getTime() + (s*1000));
+    return this;
 }
 
 export const RESPONSE_CODE_SUCCESS = 100;
@@ -53,6 +59,12 @@ export function currentTime() {
 export function convertDateTimeLocalToTime(dateTimeLocal) {
     dateTimeLocal += ":00";
     return dateTimeLocal.replace('T', ' ').substring(0, 19);
+
+
+}
+
+export function convertStringToDateTime(dateStr) {
+    return new Date(dateStr.replace(' ', 'T').substring(0, 19));
 
 
 }

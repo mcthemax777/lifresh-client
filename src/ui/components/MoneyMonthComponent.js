@@ -1,12 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import css from "./MoneyMonthComponent.module.css";
 import {
-    checkIsMonth,
-    checkIsToday,
-    PERIOD_TYPE_DAY,
-    PERIOD_TYPE_MONTH,
-    PERIOD_TYPE_WEEK,
-    PERIOD_TYPE_YEAR
+    checkIsMonth
 } from "../../Defines";
 function MoneyMonthComponent(props) {
 
@@ -99,40 +94,34 @@ function MoneyMonthComponent(props) {
         let plusMoneyArray = {};
         let minusMoneyArray = {};
 
-        console.log(props.moneyTaskList);
+        //console.log(props.moneyTaskList);
 
         for(let i = 0 ; i < props.moneyTaskList.length; i++) {
 
             const moneyTask = props.moneyTaskList[i];
             const taskStartTime = new Date(moneyTask.startTime);
 
-            if((props.periodType === PERIOD_TYPE_DAY && checkIsToday(props.today, taskStartTime) === false) ||
-                (props.periodType === PERIOD_TYPE_WEEK && checkIsToday(props.today, taskStartTime) === false) ||
-                (props.periodType === PERIOD_TYPE_MONTH && checkIsMonth(props.today, taskStartTime) === false) ||
-                (props.periodType === PERIOD_TYPE_YEAR && checkIsToday(props.today, taskStartTime) === false)) {
-                console.log(moneyTask);
-                continue;
-            }
+            console.log(props.periodType);
 
-            console.log(plusMoneyArray[taskStartTime.getDay()])
+            if(checkIsMonth(props.today, taskStartTime) === false) continue;
+
+            let moneyTaskDay = taskStartTime.getDate();
+
             if(props.moneyTaskList[i].money > 0) {
-                if(plusMoneyArray[taskStartTime.getDay()] === undefined) {
-                    plusMoneyArray[taskStartTime.getDay()] = moneyTask.money;
+                if(plusMoneyArray[moneyTaskDay] === undefined) {
+                    plusMoneyArray[moneyTaskDay] = moneyTask.money;
 
                 } else {
-                    plusMoneyArray[taskStartTime.getDay()] += moneyTask.money;
+                    plusMoneyArray[moneyTaskDay] += moneyTask.money;
                 }
             } else {
-                if(minusMoneyArray[taskStartTime.getDay()] === undefined) {
-                    minusMoneyArray[taskStartTime.getDay()] = moneyTask.money;
+                if(minusMoneyArray[moneyTaskDay] === undefined) {
+                    minusMoneyArray[moneyTaskDay] = moneyTask.money;
                 } else {
-                    minusMoneyArray[taskStartTime.getDay()] += moneyTask.money;
+                    minusMoneyArray[moneyTaskDay] += moneyTask.money;
                 }
             }
         }
-
-        console.log(plusMoneyArray);
-        console.log(minusMoneyArray);
 
         for(let i = 0 ; i < currentMonthDayDivArray.length ; i++) {
             const currentMonthDayDiv = currentMonthDayDivArray[i];
