@@ -53,6 +53,9 @@ function MoneyMonthComponent(props) {
             dayDiv.id = "dayDiv"+i;
             dayDiv.className = css.monthMoneyDay;
             dayDiv.innerText = "" + i;
+            dayDiv.onclick = () => {
+                console.log(i);
+            };
             dayDivArray.push(dayDiv);
             currentMonthDayDivArray.push(dayDiv);
             monthMoneyCalendar.current.appendChild(dayDiv);

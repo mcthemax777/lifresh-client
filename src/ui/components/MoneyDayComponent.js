@@ -3,6 +3,7 @@ import css from "./MoneyDayComponent.module.css";
 import {checkIsToday, convertStringToDateTime} from "../../Defines";
 import AddMoneyTask from "./AddMoneyTask";
 import AddMoneyCategory from "./AddMoneyCategory";
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
 
 const fontSize = 14;
 const dayMoneyTimeHeight = 1200;
@@ -152,6 +153,15 @@ function MoneyDayComponent(props) {
             moneyTaskDiv.data = moneyTask;
 
             moneyTaskDiv.style.height = (hourHeight / 2) + "px";
+            moneyTaskDiv.onclick = (event) => {
+                event.stopPropagation();
+                console.log(moneyTask);
+            };
+            moneyTaskDiv.draggable = true;
+            moneyTaskDiv.ondragenter = (e) => {console.log("onDragStart" + e);}
+            moneyTaskDiv.ondrag = (e) => {console.log("ondrag" + e)};
+            moneyTaskDiv.ondragover = (e) => {console.log("ondragover" + e)};
+            moneyTaskDiv.ondragend = (e) => {console.log("ondragend" + e)};
 
             if(moneyTask.money > 0) moneyTaskDiv.style.backgroundColor = "blue";
             else moneyTaskDiv.style.backgroundColor = "red";
@@ -257,10 +267,7 @@ function MoneyDayComponent(props) {
     },[props.today, props.getMoneyTaskList]);
     
     const onClick = () => {
-        // eslint-disable-next-line no-restricted-globals
-        let rmConfirm = confirm(props.moneyTask.moneyTaskNo + "을 지우시겠습니까?");
-        if (rmConfirm === true)
-            props.removeFunc(props.moneyTask.moneyTaskNo);
+        console.log("add task");
     }
 
     return (
@@ -269,7 +276,7 @@ function MoneyDayComponent(props) {
                 <div ref={dayMoneyTime} className={css.dayMoneyTime}>
                     <div ref={dayMoneyTimeSide} className={css.dayMoneyTimeSide}>
                     </div>
-                    <div ref={dayMoneyTimeMain} className={css.dayMoneyTimeMain}>
+                    <div ref={dayMoneyTimeMain} className={css.dayMoneyTimeMain} onClick={onClick}>
 
                     </div>
                 </div>
