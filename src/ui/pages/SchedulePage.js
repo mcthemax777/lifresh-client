@@ -3,7 +3,7 @@ import DayPlanContent from "../components/DayPlanContent";
 import {AppContext} from "../../App";
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
-import LoginButton from "../components/LoginButton";
+import css from "./SchedulePage.module.css";
 import '../../Global.css';
 import AddScheduleTask from "../components/AddScheduleTask";
 import {checkErrorResponse} from "../../Defines";
@@ -64,21 +64,21 @@ function SchedulePage() {
     }, [store.data]);
 
     return(
-        <div>
-            <h2>일정</h2>
-            <table className='listTable'>
-                <tbody>
-                <tr>
-                    <td className='listTableIndex th'><DayPlanContent /></td>
-                    <td className='listTableTitle th'><DayPlanContent /></td>
+        <div className={css.schedulePageDiv}>
+            <div className={css.scheduleTitleDiv}>일정관리</div>
+            {/*<table className='listTable'>*/}
+            {/*    <tbody>*/}
+            {/*    <tr>*/}
+            {/*        <td className='listTableIndex th'><DayPlanContent /></td>*/}
+            {/*        <td className='listTableTitle th'><DayPlanContent /></td>*/}
 
-                    <td className='listTableIndex'><DayPlanContent /></td>
-                    <td className='listTableTitle noData'><DayPlanContent /></td>
-                </tr>
-                </tbody>
-            </table>
-            <AddScheduleTask></AddScheduleTask>
-            <button><img className='addTaskBtn' src={addTaskBtnPath} onClick={addScheduleTask} alt={addTaskBtnPath}/></button>
+            {/*        <td className='listTableIndex'><DayPlanContent /></td>*/}
+            {/*        <td className='listTableTitle noData'><DayPlanContent /></td>*/}
+            {/*    </tr>*/}
+            {/*    </tbody>*/}
+            {/*</table>*/}
+            {/*<AddScheduleTask></AddScheduleTask>*/}
+            {/*<button><img className='addTaskBtn' src={addTaskBtnPath} onClick={addScheduleTask} alt={addTaskBtnPath}/></button>*/}
         </div>
     )
 }

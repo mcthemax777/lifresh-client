@@ -281,11 +281,11 @@ function MoneyDayComponent(props) {
                     </div>
                 </div>
             </div>
-            <div id="dayMoneyTask" className={css.dayMoneyTask}>
-                <AddMoneyTask mainCategoryList={props.mainCategoryList} subCategoryList={props.subCategoryList} getMoneyTaskList={props.getMoneyTaskList}></AddMoneyTask>
-                <AddMoneyCategory mainCategoryList={props.mainCategoryList} subCategoryList={props.subCategoryList} getMoneyTaskList={props.getMoneyTaskList}></AddMoneyCategory>
+            {/*<div id="dayMoneyTask" className={css.dayMoneyTask}>*/}
+            {/*    <AddMoneyTask mainCategoryList={props.mainCategoryList} subCategoryList={props.subCategoryList} getMoneyTaskList={props.getMoneyTaskList}></AddMoneyTask>*/}
+            {/*    <AddMoneyCategory mainCategoryList={props.mainCategoryList} subCategoryList={props.subCategoryList} getMoneyTaskList={props.getMoneyTaskList}></AddMoneyCategory>*/}
 
-            </div>
+            {/*</div>*/}
         </div>
     );
 }

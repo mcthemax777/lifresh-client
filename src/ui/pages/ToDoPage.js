@@ -1,9 +1,10 @@
 import React from 'react';
+import css from './ToDoPage.module.css'
 
 function ToDoPage() {
     return(
-        <div>
-            <h2>ToDoPage</h2>
+        <div className={css.toDoPageDiv}>
+            <div className={css.todoTitleDiv}>체크리스트</div>
             <div>
                 <table className='listTable'>
                     <tbody>

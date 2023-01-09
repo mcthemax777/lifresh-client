@@ -1,0 +1,16 @@
+
+.schedulePageDiv {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-radius: 1em;
+    border: 2px solid #ffc0e0;
+    margin: 5px;
+}
+
+.scheduleTitleDiv {
+    flex-basis: 48px;
+    color: #4f4f4f;
+    font-size: 32px;
+    border-bottom: 2px solid #ffc0e0;
+}

@@ -1,0 +1,16 @@
+
+.toDoPageDiv {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-radius: 1em;
+    border: 2px solid #c0e0ff;
+    margin: 5px;
+}
+
+.todoTitleDiv {
+    flex-basis: 48px;
+    color: #4f4f4f;
+    font-size: 32px;
+    border-bottom: 2px solid #c0e0ff;
+}

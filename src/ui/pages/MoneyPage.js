@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {AppContext} from "../../App";
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
@@ -17,6 +17,7 @@ import MoneyDayComponent from "../components/MoneyDayComponent";
 import MoneyYearComponent from "../components/MoneyYearComponent";
 import MoneyWeekComponent from "../components/MoneyWeekComponent";
 import MoneyMonthComponent from "../components/MoneyMonthComponent";
+import AddMoneyTask from "../components/AddMoneyTask";
 
 function MoneyPage(props) {
     const store = React.useContext(AppContext)
@@ -30,6 +31,8 @@ function MoneyPage(props) {
 
     const uid = localStorage.getItem("uid");
     const sid = localStorage.getItem("sid");
+
+    const moneyComponentDiv = useRef();
 
     const getMoneyTaskListCallback = (response) => {
 
@@ -169,16 +172,26 @@ function MoneyPage(props) {
         <MoneyContent key={index} moneyTask={moneyTask} mainName={getMainCategoryNameByNo(moneyTask.mainCategoryNo)} subName={getSubCategoryNameByNo(moneyTask.subCategoryNo)} removeFunc={removeMoneyTask}/>
     ));
 
+    const addTaskBtnPath = () => { return <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyTask>}
 
+
+    const clickAddTaskBtn = () => {
+        console.log("clickAddTaskBtn");
+
+        moneyComponentDiv.current.innerHTML = addTaskBtnPath;
+    }
 
     return(
-        <div id="moneyDiv" className={css.moneyDiv}>
+        <div id="moneyPageDiv" className={css.moneyPageDiv}>
+            <div className={css.moneyTitleDiv}>가계부
+                <button><img src="img/add_task_btn.png" alt="my image" onClick={clickAddTaskBtn} width={48} height={48} /></button>
+            </div>
             <div id="moneySumDiv" className={css.moneySumDiv}>
                 {/*<div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
                 <div id="plusMoneyDiv" className={css.plusMoneyDiv}> 수입 : {plusMoney}원</div>
                 <div id="minusMoneyDiv" className={css.minusMoneyDiv}> 지출 : {minusMoney}원</div>
             </div>
-            <div  className={css.plannerContent}>
+            <div ref={moneyComponentDiv} className={css.moneyComponentDiv}>
                 {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList} getSubCategoryNameByNo={getSubCategoryNameByNo}/> }
                 {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
                 {props.periodType === PERIOD_TYPE_MONTH && <MoneyMonthComponent className={css.daySchedule} moneyTaskList={moneyTaskList} today={props.today}/> }

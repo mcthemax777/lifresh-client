@@ -60,13 +60,13 @@ function MainPage() {
 
     return(
         <div className="defaultReactDiv">
-            <MenuComponent clickCategoryBtn={clickCategoryBtn}></MenuComponent>
+            {/*<MenuComponent clickCategoryBtn={clickCategoryBtn}></MenuComponent>*/}
             <DateComponent today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>
             <div className={css.plannerContent}>
-                { pageType === PAGE_TYPE_SCHEDULE && <SchedulePage today={today} periodType={periodType}></SchedulePage> }
-                { pageType === PAGE_TYPE_DO_TO && <ToDoPage today={today} periodType={periodType}></ToDoPage> }
-                { pageType === PAGE_TYPE_MONEY && <MoneyPage today={today} periodType={periodType}></MoneyPage> }
-                { pageType === PAGE_TYPE_SETTING && <SettingPage></SettingPage> }
+                <SchedulePage today={today} periodType={periodType}></SchedulePage>
+                <ToDoPage today={today} periodType={periodType}></ToDoPage>
+                <MoneyPage today={today} periodType={periodType}></MoneyPage>
+                {/*{ pageType === PAGE_TYPE_SETTING && <SettingPage></SettingPage> }*/}
             </div>
         </div>
     )

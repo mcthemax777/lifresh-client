@@ -4,48 +4,73 @@
     height: 100%;
 }
 
-@media (min-width: 1000px) {
-    .dayMoneyTimeScroll {
-        float: left;
-        width: calc(100% - 500px);
-        height: 100%;
-        overflow:scroll;
-        background-color: antiquewhite;
-    }
-
-    .dayMoneyTask {
-        float: left;
-        width: 500px;
-        height: 100%;
-        background-color: whitesmoke;
-    }
+.dayMoneyTimeScroll {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    height: 100%;
+    overflow-y:scroll;
+    border-radius: 2px;
+    border-top: 2px solid #d0ffd0;
 }
 
-@media (max-width: 1000px) {
-    .dayMoneyTimeScroll {
-        display: inline-block;
-        float: left;
-        width: 100%;
-        height: 100%;
-        overflow:scroll;
-        background-color: antiquewhite;
-    }
-
-    .dayMoneyTask {
-        display: none;
-        float: left;
-        width: 500px;
-        height: 100%;
-        background-color: whitesmoke;
-    }
+.dayMoneyTimeScroll::-webkit-scrollbar {
+    width: 8px;  /* 스크롤바의 너비 */
 }
+
+.dayMoneyTimeScroll::-webkit-scrollbar-thumb {
+    height: 30%; /* 스크롤바의 길이 */
+    background: #2fff2f; /* 스크롤바의 색상 */
+
+    border-radius: 1em;
+}
+
+.dayMoneyTimeScroll::-webkit-scrollbar-track {
+    background: #d0ffd0;  /*스크롤바 뒷 배경 색상*/
+    border-radius: 1em;
+}
+
+/*@media (min-width: 1000px) {*/
+/*    .dayMoneyTimeScroll {*/
+/*        float: left;*/
+/*        width: calc(100% - 500px);*/
+/*        height: 100%;*/
+/*        overflow:scroll;*/
+/*        background-color: antiquewhite;*/
+/*    }*/
+
+/*    .dayMoneyTask {*/
+/*        float: left;*/
+/*        width: 500px;*/
+/*        height: 100%;*/
+/*        background-color: whitesmoke;*/
+/*    }*/
+/*}*/
+
+/*@media (max-width: 1000px) {*/
+/*    .dayMoneyTimeScroll {*/
+/*        display: inline-block;*/
+/*        float: left;*/
+/*        width: 100%;*/
+/*        height: 100%;*/
+/*        overflow:scroll;*/
+/*        background-color: antiquewhite;*/
+/*    }*/
+
+/*    .dayMoneyTask {*/
+/*        display: none;*/
+/*        float: left;*/
+/*        width: 500px;*/
+/*        height: 100%;*/
+/*        background-color: whitesmoke;*/
+/*    }*/
+/*}*/
 
 .dayMoneyTime {
     display: inline-block;
     float: left;
     width: 100%;
     height: 2400px;
-    background-color: white;
 }
 
 
@@ -55,7 +80,6 @@
     float: left;
     width: 50px;
     height: 100%;
-    background-color: white;
 }
 
 .dayMoneyTimeMain {
