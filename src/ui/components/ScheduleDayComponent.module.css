@@ -1,37 +1,35 @@
 
-.dayMoney {
+.daySchedule {
     width: 100%;
     height: 100%;
 }
 
-.dayMoneyTimeScroll {
+.dayScheduleTimeScroll {
     display: inline-block;
     float: left;
     width: 100%;
     height: 100%;
     overflow-y:scroll;
-    border-radius: 2px;
-    border-top: 2px solid #d0ffd0;
 }
 
-.dayMoneyTimeScroll::-webkit-scrollbar {
+.dayScheduleTimeScroll::-webkit-scrollbar {
     width: 8px;  /* 스크롤바의 너비 */
 }
 
-.dayMoneyTimeScroll::-webkit-scrollbar-thumb {
+.dayScheduleTimeScroll::-webkit-scrollbar-thumb {
     height: 30%; /* 스크롤바의 길이 */
-    background: #2fff2f; /* 스크롤바의 색상 */
+    background: #ff1f3f; /* 스크롤바의 색상 */
 
     border-radius: 1em;
 }
 
-.dayMoneyTimeScroll::-webkit-scrollbar-track {
-    background: #d0ffd0;  /*스크롤바 뒷 배경 색상*/
+.dayScheduleTimeScroll::-webkit-scrollbar-track {
+    background: #ffc0e0;  /*스크롤바 뒷 배경 색상*/
     border-radius: 1em;
 }
 
 /*@media (min-width: 1000px) {*/
-/*    .dayMoneyTimeScroll {*/
+/*    .dayScheduleTimeScroll {*/
 /*        float: left;*/
 /*        width: calc(100% - 500px);*/
 /*        height: 100%;*/
@@ -39,7 +37,7 @@
 /*        background-color: antiquewhite;*/
 /*    }*/
 
-/*    .dayMoneyTask {*/
+/*    .dayScheduleTask {*/
 /*        float: left;*/
 /*        width: 500px;*/
 /*        height: 100%;*/
@@ -48,7 +46,7 @@
 /*}*/
 
 /*@media (max-width: 1000px) {*/
-/*    .dayMoneyTimeScroll {*/
+/*    .dayScheduleTimeScroll {*/
 /*        display: inline-block;*/
 /*        float: left;*/
 /*        width: 100%;*/
@@ -57,7 +55,7 @@
 /*        background-color: antiquewhite;*/
 /*    }*/
 
-/*    .dayMoneyTask {*/
+/*    .dayScheduleTask {*/
 /*        display: none;*/
 /*        float: left;*/
 /*        width: 500px;*/
@@ -66,35 +64,67 @@
 /*    }*/
 /*}*/
 
+.dayScheduleTime {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    height: 2400px;
+}
 
-.dayMoneyTimeSide {
+
+.dayScheduleTimeSide {
     position: relative;
     display: inline-block;
     float: left;
-    width: 50px;
+    width: 32px;
     height: 100%;
 }
 
-.dayMoneyTimeMain {
+.dayScheduleTimeRightSide {
     position: relative;
     display: inline-block;
     float: left;
-    width: calc(100% - 100px);
+    width: 32px;
     height: 100%;
-    background-color: antiquewhite;
 }
 
-.dayMoneyTimeSideText {
+.dayScheduleTimeMain {
+    position: relative;
+    display: inline-block;
+    float: left;
+    width: calc(100% - 68px);
+    height: 100%;
+    background-color: white;
+}
+
+.currentTimeTextDiv {
+    position: absolute;
+    text-align: left;
+    left: 4px;
+    width: 100%;
+    font-size: 14px;
+    color: red;
+}
+
+.currentTimeDiv {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: red;
+}
+
+.dayScheduleTimeSideText {
     position: absolute;
     text-align: right;
-    right: 10px;
+    right: 4px;
     width: 100%;
     font-size: 10px;
-    color: gray;
+    color: #2f2f2f;
     opacity:0.5;
 }
 
-.moneyTimeSideText {
+.scheduleTimeSideText {
     position: absolute;
     text-align: right;
     right: 10px;
@@ -102,15 +132,15 @@
     font-size: 14px;
 }
 
-.dayMoneyTimeMainSpan {
+.dayScheduleTimeMainSpan {
     position: absolute;
-    border-top: 1px solid darkgray;
+    border-top: 1px solid #d0d0d0;
     left: 0;
     width: 100%;
     height: 0;
 }
 
-.moneyTaskDiv {
+.scheduleTaskDiv {
     position: absolute;
     left: 0;
     width: 100%;
@@ -121,32 +151,32 @@
 
 }
 
-.dayMoneyTimeMainSpanDot {
+.dayScheduleTimeMainSpanDot {
     position: absolute;
-    border-top: 1px dotted darkgray;
+    border-top: 1px dotted #d0d0d0;
     left: 0;
     width: 100%;
     height: 0;
 }
 
-.monthMoney {
+.monthSchedule {
     width: 100%;
     height: 100%;
 }
 
-.monthMoneyCalendar {
+.monthScheduleCalendar {
     width: 100%;
     height: 100%;
 }
 
-.monthMoneyBlankDay {
+.monthScheduleBlankDay {
     display: inline-block;
     width: 14.28571428571428%;
     height: 200px;
     background: black;
 }
 
-.monthMoneyDay {
+.monthScheduleDay {
     display: inline-block;
     width: 14.28571428571428%;
     height: 200px;
@@ -160,60 +190,4 @@
     padding: .6rem .8rem;
     border-radius: 5px;
     border: 1px solid #eee;
-}
-
-.dayMoneyTask {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.dayMoneyTaskGroupDiv {
-}
-
-.dayMoneyTaskDateDiv {
-    width: 100%;
-    font-size: 14px;
-    text-align: left;
-    background-color: #d0d0d0;
-    border-bottom: 1px #d0d0d0;
-}
-
-.dayMoneyTaskDiv {
-    display: flex;
-    width: 100%;
-    height: 64px;
-    border-bottom: 1px solid #d0d0d0;
-    text-align: left;
-}
-
-.dayMoneyTaskMCDiv {
-    display: flex;
-    flex-basis: 64px;
-    height: 64px;
-    justify-content: center;
-    align-items: center;
-}
-
-.dayMoneyTaskRemoveDiv {
-    display: flex;
-    flex-basis: 64px;
-    height: 64px;
-    justify-content: center;
-    align-items: center;
-    border: 0;
-    background: none;
-}
-
-.dayMoneyTaskDetailDiv {
-    display: flex;
-    flex-direction: column;
-    width: calc(100% - 128px);
-    font-size: 10px;
-    flex-grow: 1
-}
-
-.dayMoneyTaskMoneyDiv {
-    font-size: 24px;
-    color: #ff1f3f;
 }

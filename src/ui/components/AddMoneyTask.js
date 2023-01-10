@@ -2,10 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
 import '../../Global.css';
-import {checkErrorResponse, convertDateTimeLocalToTime, currentTime, isNumeric} from "../../Defines";
+import {checkErrorResponse, convertDateTimeLocalToTime, isNumeric} from "../../Defines";
 import css from './AddMoneyTask.module.css'
-
-var addTaskBtnPath = "img/add_task_btn.png";
 
 function AddMoneyTask(props) {
     //const store = React.useContext(AppContext)
@@ -19,6 +17,14 @@ function AddMoneyTask(props) {
 
     const uid = localStorage.getItem("uid");
     const sid = localStorage.getItem("sid");
+
+    useEffect(() => {
+        console.log("start addMoneyTask Component");
+    }, []);
+
+    const closeAddMoneyTask = () => {
+        props.setIsAddTask(false);
+    }
 
     const addMoneyTask = (response) => {
         const pmSelect = document.getElementById('pmSelect');
@@ -105,6 +111,9 @@ function AddMoneyTask(props) {
         //인풋 데이터 초기화
         reset();
 
+        //닫기
+        closeAddMoneyTask();
+
         //가계부 리로드
         props.getMoneyTaskList();
     }
@@ -173,6 +182,7 @@ function AddMoneyTask(props) {
             <div className={css.addMoneyTaskContent}> 사용날짜 : <input id='dateTime' type='datetime-local' className={css.addMoneyTaskContent1}/></div>
             <div className={css.addMoneyTaskContent}> 설명 : <input id='detail' type='text' className={css.addMoneyTaskContent1}/></div>
             <button  className={css.addMoneyTaskContent} onClick={addMoneyTask}>등록</button>
+            <button  className={css.addMoneyTaskContent} onClick={closeAddMoneyTask}>취소</button>
 
             <br/>
             <br/>

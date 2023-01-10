@@ -1,16 +1,32 @@
 
+.daySchedule {
+    width: 100%;
+    height: 100%;
+}
+
+
 .schedulePageDiv {
+    position: relative;
     display: flex;
     flex-direction: column;
     flex: 1;
-    border-radius: 1em;
+    border-radius: 1em 1em 4px 4px;
     border: 2px solid #ffc0e0;
     margin: 5px;
+    height: calc(100% - 10px);
 }
 
 .scheduleTitleDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-basis: 48px;
     color: #4f4f4f;
     font-size: 32px;
     border-bottom: 2px solid #ffc0e0;
+}
+
+.scheduleComponentDiv {
+    width: 100%;
+    height: calc(100% - 50px);
 }

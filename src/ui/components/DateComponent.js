@@ -39,9 +39,33 @@ function DateComponent(props) {
 
     }, [props.today, props.periodType]);
 
+    const changeDisplay = () => {
+
+        console.log("ff");
+        if(props.isSchedulePageDisplay && props.isToDoPageDisplay && props.isMoneyPageDisplay) {
+
+        } else {
+            if(props.isSchedulePageDisplay) {
+                props.setIsToDoPageDisplay(true);
+                props.setIsSchedulePageDisplay(false);
+            }
+
+            if(props.isToDoPageDisplay) {
+                props.setIsMoneyPageDisplay(true);
+                props.setIsToDoPageDisplay(false);
+            }
+
+            if(props.isMoneyPageDisplay) {
+                props.setIsSchedulePageDisplay(true);
+                props.setIsMoneyPageDisplay(false);
+            }
+        }
+
+    }
+
     return(
         <div id="componentDiv" className={css.componentDiv}>
-            <button className={css.menuDiv} value="MENU">MENU</button>
+            <button onClick={changeDisplay} className={css.menuDiv} value="MENU">MENU</button>
             <div id="dateDiv" className={css.dateDiv}>
                 <input type="button" id="datePrev" className={css.datePrev} onClick={() => props.clickChangeCurrentDateBtn(-1)} value="<"/>
                 <div ref={currentDate} className={css.currentDate}></div>

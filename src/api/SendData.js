@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const url = 'http://127.0.0.1:8000/api/';
-// const url = 'http://lifresh.me/api/';
+// const url = 'http://127.0.0.1:8000/api/';
+const url = 'http://lifresh.me/api/';
 const isOnline = true;
 
 function SendData(api, data, callback, err) {
 
-    console.log("send data - " + data.mainCategoryList);
+    console.log("---send data---");
+    console.log(data);
 
     if(isOnline) {
         // 서버 전송 후 로그인 처리

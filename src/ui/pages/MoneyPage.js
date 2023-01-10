@@ -5,8 +5,7 @@ import SendData from "../../api/SendData";
 import '../../Global.css';
 import MoneyContent from "../components/MoneyContent";
 import {
-    checkErrorResponse, checkIsMonth,
-    checkIsToday,
+    checkErrorResponse,
     PERIOD_TYPE_DAY,
     PERIOD_TYPE_MONTH,
     PERIOD_TYPE_WEEK,
@@ -28,6 +27,7 @@ function MoneyPage(props) {
     const [moneyTaskList, setMoneyTaskList] = useState([]);
     const [minusMoney, setMinusMoney] = useState(0);
     const [plusMoney, setPlusMoney] = useState(0);
+    const [isAddTask, setIsAddTask] = useState(false);
 
     const uid = localStorage.getItem("uid");
     const sid = localStorage.getItem("sid");
@@ -44,9 +44,9 @@ function MoneyPage(props) {
 
         //정렬하기
         data.moneyTaskList.sort(function(a, b)  {
-            if(a.startTime > b.startTime) return 1;
+            if(a.startTime > b.startTime) return -1;
             if(a.startTime === b.startTime) return 0;
-            if(a.startTime < b.startTime) return -1;
+            if(a.startTime < b.startTime) return 1;
         });
 
         //없애도 될듯 (이 페이지에서 저장함)
@@ -89,12 +89,12 @@ function MoneyPage(props) {
             const moneyTask = moneyTaskList[i];
             const taskStartTime = new Date(moneyTask.startTime);
 
-            if((props.periodType === PERIOD_TYPE_DAY && checkIsToday(props.today, taskStartTime) === false) ||
-                (props.periodType === PERIOD_TYPE_WEEK && checkIsToday(props.today, taskStartTime) === false) ||
-                (props.periodType === PERIOD_TYPE_MONTH && checkIsMonth(props.today, taskStartTime) === false) ||
-                (props.periodType === PERIOD_TYPE_YEAR && checkIsToday(props.today, taskStartTime) === false)) {
-                continue;
-            }
+            // if((props.periodType === PERIOD_TYPE_DAY && checkIsToday(props.today, taskStartTime) === false) ||
+            //     (props.periodType === PERIOD_TYPE_WEEK && checkIsToday(props.today, taskStartTime) === false) ||
+            //     (props.periodType === PERIOD_TYPE_MONTH && checkIsMonth(props.today, taskStartTime) === false) ||
+            //     (props.periodType === PERIOD_TYPE_YEAR && checkIsToday(props.today, taskStartTime) === false)) {
+            //     continue;
+            // }
 
             if(moneyTaskList[i].money > 0) resultPlusMoney += moneyTaskList[i].money;
             else resultMinusMoney += moneyTaskList[i].money;
@@ -172,31 +172,53 @@ function MoneyPage(props) {
         <MoneyContent key={index} moneyTask={moneyTask} mainName={getMainCategoryNameByNo(moneyTask.mainCategoryNo)} subName={getSubCategoryNameByNo(moneyTask.subCategoryNo)} removeFunc={removeMoneyTask}/>
     ));
 
-    const addTaskBtnPath = () => { return <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyTask>}
+    const [addTaskBtn, setAddTaskBtn] = useState(0);
 
+    const moneyAddTaskBtnPath = "img/money_add_task_btn.png";
+    const moneyAddTaskBtnClickPath = "img/money_add_task_btn_click.png";
 
     const clickAddTaskBtn = () => {
         console.log("clickAddTaskBtn");
 
-        moneyComponentDiv.current.innerHTML = addTaskBtnPath;
+        setIsAddTask(true);
     }
 
+    //화면 크기에 따라 데이터 보일지 안보일지 세팅
+    const moneyPageDiv = useRef();
+    useEffect(() => {
+        if(props.isMoneyPageDisplay === true) {
+            moneyPageDiv.current.style.display = "flex";
+        } else {
+            moneyPageDiv.current.style.display = "none";
+        }
+
+    }, [props.isMoneyPageDisplay]);
+
     return(
-        <div id="moneyPageDiv" className={css.moneyPageDiv}>
-            <div className={css.moneyTitleDiv}>가계부
-                <button><img src="img/add_task_btn.png" alt="my image" onClick={clickAddTaskBtn} width={48} height={48} /></button>
-            </div>
+        <div ref={moneyPageDiv} className={css.moneyPageDiv}>
+            <div className={css.moneyTitleDiv}>가계부</div>
             <div id="moneySumDiv" className={css.moneySumDiv}>
                 {/*<div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
                 <div id="plusMoneyDiv" className={css.plusMoneyDiv}> 수입 : {plusMoney}원</div>
                 <div id="minusMoneyDiv" className={css.minusMoneyDiv}> 지출 : {minusMoney}원</div>
             </div>
             <div ref={moneyComponentDiv} className={css.moneyComponentDiv}>
-                {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList} getSubCategoryNameByNo={getSubCategoryNameByNo}/> }
+                {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} removeMoneyTask={removeMoneyTask} today={props.today} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList} getSubCategoryNameByNo={getSubCategoryNameByNo}/> }
                 {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
                 {props.periodType === PERIOD_TYPE_MONTH && <MoneyMonthComponent className={css.daySchedule} moneyTaskList={moneyTaskList} today={props.today}/> }
                 {props.periodType === PERIOD_TYPE_YEAR && <MoneyYearComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
             </div>
+            <button onClick={clickAddTaskBtn} className="addTaskBtn" onMouseDown={() => {setAddTaskBtn(1); clickAddTaskBtn();}} onMouseUp={() => setAddTaskBtn(0)} onMouseLeave={() => setAddTaskBtn(0)} >
+                { addTaskBtn === 0 && <img src={moneyAddTaskBtnPath} width={64} height={64} /> }
+                { addTaskBtn === 1 && <img src={moneyAddTaskBtnClickPath} width={64} height={64} /> }
+            </button>
+
+            {
+                isAddTask === true ? <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList} setIsAddTask={setIsAddTask}></AddMoneyTask> : <div></div>
+            }
+            {/*{*/}
+            {/*    <AddMoneyCategory mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyCategory>*/}
+            {/*}*/}
        </div>
         //
         // <div>
@@ -205,8 +227,6 @@ function MoneyPage(props) {
         //     {minusMoneyTaskComponentList}
         //     <h3> 총 수입 : {plusMoney}원</h3>
         //     {plusMoneyTaskComponentList}
-        //     <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyTask>
-        //     <AddMoneyCategory mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyCategory>
         // </div>
     )
 }

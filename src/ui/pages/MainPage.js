@@ -17,6 +17,7 @@ import {
     PERIOD_TYPE_DAY,
     PERIOD_TYPE_MONTH, PERIOD_TYPE_WEEK, PERIOD_TYPE_YEAR
 } from "../../Defines";
+import useWindowDimensions from "../../WindowDimensions";
 
 function MainPage() {
     let store = React.useContext(AppContext)
@@ -27,11 +28,55 @@ function MainPage() {
     const [today, setToday] = useState(new Date());
     const [periodType, setPeriodType] = useState(0);
 
-
+    const [isSchedulePageDisplay, setIsSchedulePageDisplay] = useState(true);
+    const [isToDoPageDisplay, setIsToDoPageDisplay] = useState(true);
+    const [isMoneyPageDisplay, setIsMoneyPageDisplay] = useState(true);
 
     const clickCategoryBtn = (changePageType) => {
         setPageType(changePageType);
     }
+
+    const { windowHeight, windowWidth } = useWindowDimensions();
+
+    const getWindowDimensions = () => {
+        const { innerWidth: width, innerHeight: height } = window;
+        return {
+            width,
+            height
+        };
+    }
+
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowDimensions(getWindowDimensions());
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+
+    useEffect(() => {
+
+        let windowWidth = windowDimensions.width;
+        let windowHeight = windowDimensions.height;
+
+        if(windowWidth >= 1000) {
+            setIsSchedulePageDisplay(true);
+            setIsToDoPageDisplay(true);
+            setIsMoneyPageDisplay(true);
+        } else {
+            //3개다 켜져 있으면 하나만 키기
+            if(isSchedulePageDisplay && isToDoPageDisplay && isMoneyPageDisplay) {
+                setIsSchedulePageDisplay(false);
+                setIsToDoPageDisplay(false);
+                setIsMoneyPageDisplay(true);
+            }
+        }
+
+    }, [windowDimensions]);
 
     const clickChangeCurrentDateBtn = (num) => {
 
@@ -50,22 +95,14 @@ function MainPage() {
         setPeriodType(Number(e.target.value));
     }
 
-    useEffect(() => {
-
-    }, []);
-
-    useEffect(() => {
-        console.log(store.data);
-    }, [store.data]);
-
     return(
         <div className="defaultReactDiv">
             {/*<MenuComponent clickCategoryBtn={clickCategoryBtn}></MenuComponent>*/}
-            <DateComponent today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>
+            <DateComponent isMoneyPageDisplay={isMoneyPageDisplay} isToDoPageDisplay={isToDoPageDisplay} isSchedulePageDisplay={isSchedulePageDisplay} setIsMoneyPageDisplay={setIsMoneyPageDisplay} setIsToDoPageDisplay={setIsToDoPageDisplay} setIsSchedulePageDisplay={setIsSchedulePageDisplay} today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>
             <div className={css.plannerContent}>
-                <SchedulePage today={today} periodType={periodType}></SchedulePage>
-                <ToDoPage today={today} periodType={periodType}></ToDoPage>
-                <MoneyPage today={today} periodType={periodType}></MoneyPage>
+                <SchedulePage isSchedulePageDisplay={isSchedulePageDisplay} today={today} periodType={periodType}></SchedulePage>
+                <ToDoPage isToDoPageDisplay={isToDoPageDisplay} today={today} periodType={periodType}></ToDoPage>
+                <MoneyPage isMoneyPageDisplay={isMoneyPageDisplay} today={today} periodType={periodType}></MoneyPage>
                 {/*{ pageType === PAGE_TYPE_SETTING && <SettingPage></SettingPage> }*/}
             </div>
         </div>

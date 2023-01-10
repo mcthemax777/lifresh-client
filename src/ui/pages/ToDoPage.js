@@ -1,9 +1,30 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import css from './ToDoPage.module.css'
 
-function ToDoPage() {
+function ToDoPage(props) {
+
+    const [addTaskBtn, setAddTaskBtn] = useState(0);
+
+    const moneyAddTaskBtnPath = "img/todo_add_task_btn.png";
+    const moneyAddTaskBtnClickPath = "img/todo_add_task_btn_click.png";
+
+    const clickAddTaskBtn = () => {
+        console.log("clickAddTaskBtn");
+    }
+
+    //화면 크기에 따라 데이터 보일지 안보일지 세팅
+    const toDoPageDiv = useRef();
+    useEffect(() => {
+        if(props.isToDoPageDisplay === true) {
+            toDoPageDiv.current.style.display = "flex";
+        } else {
+            toDoPageDiv.current.style.display = "none";
+        }
+
+    }, [props.isToDoPageDisplay]);
+
     return(
-        <div className={css.toDoPageDiv}>
+        <div ref={toDoPageDiv} className={css.toDoPageDiv}>
             <div className={css.todoTitleDiv}>체크리스트</div>
             <div>
                 <table className='listTable'>
@@ -19,6 +40,10 @@ function ToDoPage() {
                     </tbody>
                 </table>
             </div>
+            <button onClick={clickAddTaskBtn} className="addTaskBtn" draggable={false} onMouseDown={() => setAddTaskBtn(1)} onMouseUp={() => setAddTaskBtn(0)} onMouseLeave={() => setAddTaskBtn(0)} >
+                { addTaskBtn === 0 && <img src={moneyAddTaskBtnPath} width={64} height={64} /> }
+                { addTaskBtn === 1 && <img src={moneyAddTaskBtnClickPath} width={64} height={64} /> }
+            </button>
         </div>
     )
 }
