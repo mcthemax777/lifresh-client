@@ -1,17 +1,5 @@
-@media (min-width: 1000px) {
-    .plannerContent {
-        display: flex;
-        width: 100%;
-        height: calc(100% - 50px);
-        ;
-    }
-}
-
-@media (max-width: 1000px) {
-    .plannerContent {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: calc(100% - 50px);
-    }
+.plannerContent {
+    display: flex;
+    width: 100%;
+    height: calc(100% - 50px);
 }
