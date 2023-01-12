@@ -1,8 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import css from "./MoneyDayComponent.module.css";
 import DayMoneyTaskGroupList from "./DayMoneyTaskGroupList";
+import {MoneyContext} from "../pages/MoneyPage";
 
 function MoneyDayComponent(props) {
+
+    const {store, } = React.useContext(MoneyContext);
 
     const dayMoneyTimeScroll = useRef();
     const dayMoneyTask = useRef();
@@ -59,7 +62,7 @@ function MoneyDayComponent(props) {
         }
 
         //데이터 삽입
-        let moneyTaskList = props.moneyTaskLisk;
+        let moneyTaskList = store.moneyTaskList;
 
         let resultGroupList = {};
 
@@ -89,16 +92,7 @@ function MoneyDayComponent(props) {
 
     useEffect(() => {
         setData();
-
-    },[props.today, props.getMoneyTaskList]);
-    
-    const onClick = () => {
-        console.log("add task");
-    }
-
-    const clickRemove = (taskNo) => {
-        console.log("clickRemove");
-    }
+    },[props.today, store.moneyTaskList]);
 
     return (
         <div className="defaultReactDiv">
@@ -106,16 +100,11 @@ function MoneyDayComponent(props) {
                 <div ref={dayMoneyTask} className={css.dayMoneyTask}>
                     {
                         Object.entries(groupList).map((moneyTaskList, index) => (
-                        <DayMoneyTaskGroupList key ={index} className={css.dayMoneyTaskListDiv} moneyTaskList={moneyTaskList} removeMoneyTask={props.removeMoneyTask} />
+                            <DayMoneyTaskGroupList key={index} moneyTaskList={moneyTaskList} />
                         ))
                     }
                 </div>
             </div>
-            {/*<div id="dayMoneyTask" className={css.dayMoneyTask}>*/}
-            {/*    <AddMoneyTask mainCategoryList={props.mainCategoryList} subCategoryList={props.subCategoryList} getMoneyTaskList={props.getMoneyTaskList}></AddMoneyTask>*/}
-            {/*    <AddMoneyCategory mainCategoryList={props.mainCategoryList} subCategoryList={props.subCategoryList} getMoneyTaskList={props.getMoneyTaskList}></AddMoneyCategory>*/}
-
-            {/*</div>*/}
         </div>
     );
 }

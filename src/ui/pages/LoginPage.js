@@ -7,7 +7,9 @@ import MainPage from "./MainPage";
 import {RESPONSE_CODE_SUCCESS} from "../../Defines";
 
 function LoginPage() {
-    const store = React.useContext(AppContext)
+
+    const [id, setId] = useState("");
+    const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
 
@@ -21,15 +23,12 @@ function LoginPage() {
             return ;
         }
 
-        alert("LOGIN");
-
         //세션 저장
         localStorage.setItem("uid", data.uid);
         localStorage.setItem("sid", data.sid);
 
         //화면 전환
         navigate("/Main");
-
     }
 
     const loginErr = (response) => {
@@ -37,8 +36,6 @@ function LoginPage() {
     }
 
     const handleClick = () => {
-        const id = store.id;
-        const password = store.password;
 
         //포맷 체크
         if (id === '' || password === '') {
@@ -46,9 +43,9 @@ function LoginPage() {
             return;
         }
 
-        console.log("id - " + id + ", password - " + password);
-        // 로딩 화면 시작
+        // TODO. 로딩 화면 시작해야됨
 
+        //전송
         SendData("login",
             {
                 userId: id,
@@ -61,31 +58,21 @@ function LoginPage() {
 
     useEffect(() => {
 
+        const uid = localStorage.getItem("uid");
         const sid = localStorage.getItem("sid");
 
-        //세션이 있으면 자동 로그인
-        if(sid != null) {
-            console.log(sid);
+        //uid, sid 있으면 자동 로그인
+        if(uid != null && sid != null) {
+            console.log("uid : " + uid + ", sid : " + sid);
             navigate('/Main');
         }
 
     }, []);
 
-    useEffect(() => {
-
-        console.log('컴포넌트가 화면에 나타남 - ' + store.id + ', ' + store.password );
-        return () => {
-            console.log('컴포넌트가 화면에서 사라짐 - ' + store.id + ', ' + store.password);
-        };
-
-    }, [store.id, store.password]);
-
     return (
         <div>
-            <input type="text" id="id" onChange={e=> store.setId(e.target.value)}></input>
-            <br></br>
-            <input type="password" id="password" onChange={e=> store.setPassword(e.target.value)}></input>
-            <br></br>
+            <input type="text" id="id" onChange={e=> setId(e.target.value)}></input><br/>
+            <input type="password" id="password" onChange={e=> setPassword(e.target.value)}></input><br/>
             <LoginButton onClick={handleClick}></LoginButton>
         </div>
     )

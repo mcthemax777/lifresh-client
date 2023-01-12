@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
 import '../../Global.css';
 import {checkErrorResponse, convertDateTimeLocalToTime, isNumeric} from "../../Defines";
 import css from './AddMoneyTask.module.css'
+import {MoneyContext} from "../pages/MoneyPage";
 
 function AddMoneyTask(props) {
-    //const store = React.useContext(AppContext)
+    const {store, } = useContext(MoneyContext);
     let navigate = useNavigate();
 
     const plusMoney = "수입";
@@ -23,7 +24,7 @@ function AddMoneyTask(props) {
     }, []);
 
     const closeAddMoneyTask = () => {
-        props.setIsAddTask(false);
+        store.setIsAddTask(false);
     }
 
     const addMoneyTask = (response) => {
@@ -99,7 +100,7 @@ function AddMoneyTask(props) {
         }
     }
 
-    const addMoneyTaskListCallback = (response) => {
+    const addMoneyTaskListCallback = (response, sendData) => {
 
         const data = response.data;
 
@@ -108,14 +109,27 @@ function AddMoneyTask(props) {
             return ;
         }
 
+        console.log(data);
+        console.log(store.moneyTaskList);
+
+
         //인풋 데이터 초기화
         reset();
+
+        //데이터 추가
+        // let copyMoneyTaskList = [...store.moneyTaskList];
+        //
+        // for( let i = 0; i < copyMoneyTaskList.length; i++) {
+        //     if ( sendData.moneyTaskNoList.includes(copyMoneyTaskList[i].moneyTaskNo)) {
+        //         copyMoneyTaskList.splice(i, 1);
+        //     }
+        // }
+        //
+        // store.setMoneyTaskList(copyMoneyTaskList);
 
         //닫기
         closeAddMoneyTask();
 
-        //가계부 리로드
-        props.getMoneyTaskList();
     }
 
     const addMoneyTaskListErr = (response) => {
@@ -162,7 +176,7 @@ function AddMoneyTask(props) {
                 <select onChange={handleMainCategorySelect} id="mainCategorySelect" className={css.addMoneyTaskContent1}>
                     <option value='0'>=== 선택 ===</option>
                     {
-                        props.mainCategoryList.map((mainCategory, index) => (
+                        store.mainCategoryList.map((mainCategory, index) => (
                             <option key={index} value={mainCategory.mainCategoryNo}>{mainCategory.name}</option>
                         ))
                     }
@@ -172,7 +186,7 @@ function AddMoneyTask(props) {
                 <select onChange={handleSubCategorySelect} id="subCategorySelect" className={css.addMoneyTaskContent1}>
                     <option value='0'>=== 선택 ===</option>
                     {
-                        props.subCategoryList.map((subCategory, index) => (
+                        store.subCategoryList.map((subCategory, index) => (
                             Number(selectedMainCategoryNo) === Number(subCategory.mainCategoryNo) &&
                             <option key={index} value={subCategory.subCategoryNo}>{subCategory.name}</option>
                         ))

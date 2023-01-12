@@ -18,8 +18,9 @@ import MoneyWeekComponent from "../components/MoneyWeekComponent";
 import MoneyMonthComponent from "../components/MoneyMonthComponent";
 import AddMoneyTask from "../components/AddMoneyTask";
 
+export const MoneyContext = React.createContext()
+
 function MoneyPage(props) {
-    const store = React.useContext(AppContext)
     let navigate = useNavigate();
 
     const [mainCategoryList, setMainCategoryList] = useState([]);
@@ -28,6 +29,17 @@ function MoneyPage(props) {
     const [minusMoney, setMinusMoney] = useState(0);
     const [plusMoney, setPlusMoney] = useState(0);
     const [isAddTask, setIsAddTask] = useState(false);
+
+    const store = {
+        mainCategoryList, setMainCategoryList,
+        subCategoryList, setSubCategoryList,
+        moneyTaskList, setMoneyTaskList,
+        minusMoney, setMinusMoney,
+        plusMoney, setPlusMoney,
+        isAddTask, setIsAddTask,
+
+    }
+
 
     const uid = localStorage.getItem("uid");
     const sid = localStorage.getItem("sid");
@@ -48,9 +60,6 @@ function MoneyPage(props) {
             if(a.startTime === b.startTime) return 0;
             if(a.startTime < b.startTime) return 1;
         });
-
-        //없애도 될듯 (이 페이지에서 저장함)
-        // store.setMoneyTaskList(data.moneyTaskList);
 
         setMainCategoryList(data.mainCategoryList);
         setSubCategoryList(data.subCategoryList);
@@ -110,41 +119,26 @@ function MoneyPage(props) {
 
     }, [props.today, props.periodType]);
 
-    const removeMoneyTaskListCallback = (response) => {
-
-        const data = response.data;
-
-        if(checkErrorResponse(data, navigate) === false)
-        {
-            return ;
-        }
-
-        getMoneyTaskList();
-    }
-
-    const removeMoneyTaskListErr = (response) => {
-        console.log("removeMoneyTaskListErr" + response);
-    }
-
-    const removeMoneyTask = (moneyTaskNo) => {
-        console.log("remove - moneyTaskNo : " + moneyTaskNo);
-
-        SendData("removeMoneyTaskList",
-            {
-                uid: uid,
-                sid: sid,
-                moneyTaskNoList: [moneyTaskNo]
-            },
-            removeMoneyTaskListCallback,
-            removeMoneyTaskListErr
-        );
-    }
-
     const getMainCategoryNameByNo = (mainCategoryNo) => {
 
         for(let i = 0 ; i < mainCategoryList.length ; i++) {
             if (Number(mainCategoryList[i].mainCategoryNo) === mainCategoryNo) {
                 return mainCategoryList[i].name;
+            }
+        }
+
+        return "NONE";
+    }
+
+    const getMainCategoryNameBySubCategoryNo = (subCategoryNo) => {
+
+        for(let i = 0 ; i < subCategoryList.length ; i++) {
+            if (Number(subCategoryList[i].subCategoryNo) === subCategoryNo) {
+                for(let i = 0 ; i < mainCategoryList.length ; i++) {
+                    if (Number(mainCategoryList[i].mainCategoryNo) === Number(subCategoryList[i].mainCategoryNo)) {
+                        return mainCategoryList[i].name;
+                    }
+                }
             }
         }
 
@@ -161,16 +155,6 @@ function MoneyPage(props) {
 
         return "NONE";
     }
-
-    const plusMoneyTaskComponentList = moneyTaskList.map((moneyTask, index) => (
-        moneyTask.money > 0 &&
-        <MoneyContent key={index} moneyTask={moneyTask} mainName={getMainCategoryNameByNo(moneyTask.mainCategoryNo)} subName={getSubCategoryNameByNo(moneyTask.subCategoryNo)} removeFunc={removeMoneyTask}/>
-    ));
-
-    const minusMoneyTaskComponentList = moneyTaskList.map((moneyTask, index) => (
-        moneyTask.money < 0 &&
-        <MoneyContent key={index} moneyTask={moneyTask} mainName={getMainCategoryNameByNo(moneyTask.mainCategoryNo)} subName={getSubCategoryNameByNo(moneyTask.subCategoryNo)} removeFunc={removeMoneyTask}/>
-    ));
 
     const [addTaskBtn, setAddTaskBtn] = useState(0);
 
@@ -195,39 +179,29 @@ function MoneyPage(props) {
     }, [props.isMoneyPageDisplay]);
 
     return(
-        <div ref={moneyPageDiv} className={css.moneyPageDiv}>
-            <div className={css.moneyTitleDiv}>가계부</div>
-            <div id="moneySumDiv" className={css.moneySumDiv}>
-                {/*<div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
-                <div id="plusMoneyDiv" className={css.plusMoneyDiv}> 수입 : {plusMoney}원</div>
-                <div id="minusMoneyDiv" className={css.minusMoneyDiv}> 지출 : {minusMoney}원</div>
+        <MoneyContext.Provider value={{store, getMainCategoryNameByNo, getSubCategoryNameByNo, getMainCategoryNameBySubCategoryNo}}>
+            <div ref={moneyPageDiv} className={css.moneyPageDiv}>
+                <div className={css.moneyTitleDiv}>가계부</div>
+                <div id="moneySumDiv" className={css.moneySumDiv}>
+                    {/*<div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
+                    <div id="plusMoneyDiv" className={css.plusMoneyDiv}> 수입 : {plusMoney}원</div>
+                    <div id="minusMoneyDiv" className={css.minusMoneyDiv}> 지출 : {minusMoney}원</div>
+                </div>
+                <div ref={moneyComponentDiv} className={css.moneyComponentDiv}>
+                    {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} today={props.today}/> }
+                    {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
+                    {props.periodType === PERIOD_TYPE_MONTH && <MoneyMonthComponent className={css.daySchedule} today={props.today}/> }
+                    {props.periodType === PERIOD_TYPE_YEAR && <MoneyYearComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
+                </div>
+                <button onClick={clickAddTaskBtn} className="addTaskBtn" onMouseDown={() => {setAddTaskBtn(1); clickAddTaskBtn();}} onMouseUp={() => setAddTaskBtn(0)} onMouseLeave={() => setAddTaskBtn(0)} >
+                    { addTaskBtn === 0 && <img src={moneyAddTaskBtnPath} width={64} height={64} /> }
+                    { addTaskBtn === 1 && <img src={moneyAddTaskBtnClickPath} width={64} height={64} /> }
+                </button>
+                {
+                    isAddTask === true ? <AddMoneyTask/> : <div></div>
+                }
             </div>
-            <div ref={moneyComponentDiv} className={css.moneyComponentDiv}>
-                {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} removeMoneyTask={removeMoneyTask} today={props.today} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList} getSubCategoryNameByNo={getSubCategoryNameByNo}/> }
-                {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
-                {props.periodType === PERIOD_TYPE_MONTH && <MoneyMonthComponent className={css.daySchedule} moneyTaskList={moneyTaskList} today={props.today}/> }
-                {props.periodType === PERIOD_TYPE_YEAR && <MoneyYearComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
-            </div>
-            <button onClick={clickAddTaskBtn} className="addTaskBtn" onMouseDown={() => {setAddTaskBtn(1); clickAddTaskBtn();}} onMouseUp={() => setAddTaskBtn(0)} onMouseLeave={() => setAddTaskBtn(0)} >
-                { addTaskBtn === 0 && <img src={moneyAddTaskBtnPath} width={64} height={64} /> }
-                { addTaskBtn === 1 && <img src={moneyAddTaskBtnClickPath} width={64} height={64} /> }
-            </button>
-
-            {
-                isAddTask === true ? <AddMoneyTask mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList} setIsAddTask={setIsAddTask}></AddMoneyTask> : <div></div>
-            }
-            {/*{*/}
-            {/*    <AddMoneyCategory mainCategoryList={mainCategoryList} subCategoryList={subCategoryList} getMoneyTaskList={getMoneyTaskList}></AddMoneyCategory>*/}
-            {/*}*/}
-       </div>
-        //
-        // <div>
-        //     <h2>가계부</h2>
-        //     <h3> 총 지출 : {minusMoney}원</h3>
-        //     {minusMoneyTaskComponentList}
-        //     <h3> 총 수입 : {plusMoney}원</h3>
-        //     {plusMoneyTaskComponentList}
-        // </div>
+        </MoneyContext.Provider>
     )
 }
 

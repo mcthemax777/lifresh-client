@@ -1,9 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import css from "./MoneyMonthComponent.module.css";
 import {
     checkIsMonth
 } from "../../Defines";
+import {MoneyContext} from "../pages/MoneyPage";
 function MoneyMonthComponent(props) {
+
+    const { store, } = useContext(MoneyContext);
 
     const monthMoneyCalendar = useRef();
     const dayMoneyTimeSide = useRef();
@@ -99,18 +102,16 @@ function MoneyMonthComponent(props) {
 
         //console.log(props.moneyTaskList);
 
-        for(let i = 0 ; i < props.moneyTaskList.length; i++) {
+        for(let i = 0 ; i < store.moneyTaskList.length; i++) {
 
-            const moneyTask = props.moneyTaskList[i];
+            const moneyTask = store.moneyTaskList[i];
             const taskStartTime = new Date(moneyTask.startTime);
-
-            console.log(props.periodType);
 
             if(checkIsMonth(props.today, taskStartTime) === false) continue;
 
             let moneyTaskDay = taskStartTime.getDate();
 
-            if(props.moneyTaskList[i].money > 0) {
+            if(store.moneyTaskList[i].money > 0) {
                 if(plusMoneyArray[moneyTaskDay] === undefined) {
                     plusMoneyArray[moneyTaskDay] = moneyTask.money;
 
@@ -171,10 +172,6 @@ function MoneyMonthComponent(props) {
     },[props.today]);
     
     const onClick = () => {
-        // eslint-disable-next-line no-restricted-globals
-        let rmConfirm = confirm(props.moneyTask.moneyTaskNo + "을 지우시겠습니까?");
-        if (rmConfirm === true)
-            props.removeFunc(props.moneyTask.moneyTaskNo);
     }
 
     return (

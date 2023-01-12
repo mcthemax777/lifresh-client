@@ -1,5 +1,4 @@
 import {useNavigate} from "react-router-dom";
-import LoginPage from './ui/pages/LoginPage';
 
 export const PAGE_TYPE_SCHEDULE = 0;
 export const PAGE_TYPE_DO_TO = 1;
