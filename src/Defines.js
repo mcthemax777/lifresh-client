@@ -9,6 +9,7 @@ export const PERIOD_TYPE_DAY = 0;
 export const PERIOD_TYPE_WEEK = 1;
 export const PERIOD_TYPE_MONTH = 2;
 export const PERIOD_TYPE_YEAR = 3;
+export const PERIOD_TYPE_CUSTOM = 4;
 
 export const checkIsToday = (today, startTime) => {
     return today.getFullYear() === startTime.getFullYear() &&

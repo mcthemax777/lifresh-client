@@ -13,7 +13,7 @@
     border-radius: 1em 1em 4px 4px;
     border: 2px solid #ffc0e0;
     margin: 5px;
-    height: calc(100% - 10px);
+    height: calc(100% - 15px);
 }
 
 .scheduleTitleDiv {

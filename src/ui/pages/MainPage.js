@@ -98,7 +98,7 @@ function MainPage() {
     return(
         <div className="defaultReactDiv">
             {/*<MenuComponent clickCategoryBtn={clickCategoryBtn}></MenuComponent>*/}
-            <DateComponent isMoneyPageDisplay={isMoneyPageDisplay} isToDoPageDisplay={isToDoPageDisplay} isSchedulePageDisplay={isSchedulePageDisplay} setIsMoneyPageDisplay={setIsMoneyPageDisplay} setIsToDoPageDisplay={setIsToDoPageDisplay} setIsSchedulePageDisplay={setIsSchedulePageDisplay} today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>
+            {/*<DateComponent isMoneyPageDisplay={isMoneyPageDisplay} isToDoPageDisplay={isToDoPageDisplay} isSchedulePageDisplay={isSchedulePageDisplay} setIsMoneyPageDisplay={setIsMoneyPageDisplay} setIsToDoPageDisplay={setIsToDoPageDisplay} setIsSchedulePageDisplay={setIsSchedulePageDisplay} today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>*/}
             <div className={css.plannerContent}>
                 <SchedulePage isSchedulePageDisplay={isSchedulePageDisplay} today={today} periodType={periodType}></SchedulePage>
                 <ToDoPage isToDoPageDisplay={isToDoPageDisplay} today={today} periodType={periodType}></ToDoPage>

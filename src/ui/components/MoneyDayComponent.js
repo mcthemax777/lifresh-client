@@ -5,8 +5,6 @@ import {MoneyContext} from "../pages/MoneyPage";
 
 function MoneyDayComponent(props) {
 
-    const {store, } = React.useContext(MoneyContext);
-
     const dayMoneyTimeScroll = useRef();
     const dayMoneyTask = useRef();
 
@@ -62,7 +60,7 @@ function MoneyDayComponent(props) {
         }
 
         //데이터 삽입
-        let moneyTaskList = store.moneyTaskList;
+        let moneyTaskList = props.moneyTaskList;
 
         let resultGroupList = {};
 
@@ -92,7 +90,7 @@ function MoneyDayComponent(props) {
 
     useEffect(() => {
         setData();
-    },[props.today, store.moneyTaskList]);
+    },[props.today, props.moneyTaskList]);
 
     return (
         <div className="defaultReactDiv">

@@ -7,7 +7,7 @@ import css from './AddMoneyTask.module.css'
 import {MoneyContext} from "../pages/MoneyPage";
 
 function AddMoneyTask(props) {
-    const {store, } = useContext(MoneyContext);
+    const {store, loadMoneyTaskList} = useContext(MoneyContext);
     let navigate = useNavigate();
 
     const plusMoney = "수입";
@@ -116,16 +116,26 @@ function AddMoneyTask(props) {
         //인풋 데이터 초기화
         reset();
 
-        //데이터 추가
+        //데이터 추가(TODO. 서버에서 데이터 내려주면 주석 풀기)
         // let copyMoneyTaskList = [...store.moneyTaskList];
         //
-        // for( let i = 0; i < copyMoneyTaskList.length; i++) {
-        //     if ( sendData.moneyTaskNoList.includes(copyMoneyTaskList[i].moneyTaskNo)) {
-        //         copyMoneyTaskList.splice(i, 1);
+        // for( let i = 0; i < data.moneyTaskList.length; i++) {
+        //
+        //     let moneyTask = data.moneyTaskList[i];
+        //
+        //     for( let j  = 0 ; j < copyMoneyTaskList.length ; j++) {
+        //
+        //         //TODO. 부등호 맞는지 확인해야됨
+        //         if(copyMoneyTaskList[j].startTime <= moneyTask.startTime) {
+        //             copyMoneyTaskList.splice(j, 0, moneyTask);
+        //             break;
+        //         }
         //     }
+        //
         // }
         //
         // store.setMoneyTaskList(copyMoneyTaskList);
+        loadMoneyTaskList();
 
         //닫기
         closeAddMoneyTask();
