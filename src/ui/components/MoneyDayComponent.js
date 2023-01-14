@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import css from "./MoneyDayComponent.module.css";
 import DayMoneyTaskGroupList from "./DayMoneyTaskGroupList";
 import {MoneyContext} from "../pages/MoneyPage";
+import {convertDateTimeLocalToTime, convertDateTimeToString} from "../../Defines";
 
 function MoneyDayComponent(props) {
 
@@ -77,10 +78,12 @@ function MoneyDayComponent(props) {
             if(moneyTask.money > 0) setPlusMoney(plusMoney + moneyTask.money);
             else setMinusMoney(minusMoney + moneyTask.money);
 
-            const date = taskStartTime.getDate();
-            const month = taskStartTime.getMonth();
-            const year = taskStartTime.getFullYear();
-            const taskDate = year + "." + (month+1) + "." + date;
+            taskStartTime.setHours(0);
+            taskStartTime.setMinutes(0);
+            taskStartTime.setSeconds(0);
+            taskStartTime.setMilliseconds(0);
+
+            const taskDate = convertDateTimeToString(taskStartTime);
 
             resultGroupList[taskDate] === undefined ? resultGroupList[taskDate] = [moneyTask] : resultGroupList[taskDate].push(moneyTask);
         }

@@ -8,7 +8,12 @@ import {
     PERIOD_TYPE_MONTH,
     PERIOD_TYPE_WEEK,
     PERIOD_TYPE_YEAR,
-    PERIOD_TYPE_CUSTOM, convertStringToDateTime
+    MONEY_VIEW_TYPE_TIME,
+    PERIOD_TYPE_CUSTOM,
+    convertStringToDateTime,
+    MONEY_FILTER_TYPE_INCOME,
+    MONEY_VIEW_TYPE_CATEGORY,
+    MONEY_FILTER_TYPE_FIXED_SPEND, MONEY_FILTER_TYPE_FREE_SPEND
 } from "../../Defines";
 import css from "./MoneyPage.module.css";
 import MoneyDayComponent from "../components/MoneyDayComponent";
@@ -23,6 +28,7 @@ export const MoneyContext = React.createContext()
 function MoneyPage(props) {
     let navigate = useNavigate();
 
+    const [viewType, setViewType] = useState(MONEY_VIEW_TYPE_TIME);
     const [mainCategoryList, setMainCategoryList] = useState([]);
     const [subCategoryList, setSubCategoryList] = useState([]);
     const [moneyTaskList, setMoneyTaskList] = useState([]);
@@ -31,7 +37,8 @@ function MoneyPage(props) {
     const [isAddTask, setIsAddTask] = useState(false);
     const [startDate, setStartDate] = useState(getTodayDateWithoutTime());
     const [endDate, setEndDate] = useState(getTodayDateWithoutTime());
-    const [periodType, setPeriodType] = useState(PERIOD_TYPE_DAY);
+    const [filterList, setFilterList] = useState([true, true, true]);
+    const [periodType, setPeriodType] = useState(PERIOD_TYPE_MONTH);
     const [moneyTaskListWithFilter, setMoneyTaskListWithFilter] = useState([]);
 
     const store = {
@@ -137,11 +144,20 @@ function MoneyPage(props) {
         let newMinusMoney = 0;
 
         for(let i = 0; i < moneyTaskList.length; i++) {
-            if(isBetweenPeriod(convertStringToDateTime(moneyTaskList[i].startTime))) {
-                newMoneyTaskListWithFilter.push(moneyTaskList[i]);
 
-                if(moneyTaskList[i].money > 0) newPlusMoney += moneyTaskList[i].money;
-                else newMinusMoney += moneyTaskList[i].money;
+            const moneyTask = moneyTaskList[i];
+            //기간 확인
+            if(isBetweenPeriod(convertStringToDateTime(moneyTask.startTime))) {
+
+                //필터 확인
+                if(moneyTask )
+
+                newMoneyTaskListWithFilter.push(moneyTask);
+
+
+
+                if(moneyTask.money > 0) newPlusMoney += moneyTask.money;
+                else newMinusMoney +=moneyTask.money;
             }
         }
 
@@ -149,7 +165,7 @@ function MoneyPage(props) {
         setPlusMoney(newPlusMoney);
         setMinusMoney(newMinusMoney);
 
-    }, [startDate, endDate, moneyTaskList]);
+    }, [startDate, endDate, moneyTaskList, viewType, filterList]);
 
 
     const getMainCategoryNameByNo = (mainCategoryNo) => {
@@ -211,18 +227,109 @@ function MoneyPage(props) {
 
     }, [props.isMoneyPageDisplay]);
 
+    const clickView = (newViewType) => {
+
+        if(newViewType === viewType) return ;
+
+        setViewType(newViewType);
+
+        if(newViewType === MONEY_VIEW_TYPE_CATEGORY) {
+            if(filterList[MONEY_FILTER_TYPE_INCOME] && (filterList[MONEY_FILTER_TYPE_FIXED_SPEND] || filterList[MONEY_FILTER_TYPE_FREE_SPEND])) {
+                let copyFilterList = [...filterList];
+                copyFilterList[MONEY_FILTER_TYPE_INCOME] = false;
+
+                setFilterList(copyFilterList);
+            }
+        }
+    }
+
+    const clickFilter = (filterType) => {
+        let copyFilterList = [...filterList];
+
+        if(copyFilterList[filterType]) copyFilterList[filterType] = false;
+        else {
+            copyFilterList[filterType] = true;
+            if(filterType === MONEY_FILTER_TYPE_INCOME && viewType === MONEY_VIEW_TYPE_CATEGORY) {
+                copyFilterList[MONEY_FILTER_TYPE_FIXED_SPEND] = false;
+                copyFilterList[MONEY_FILTER_TYPE_FREE_SPEND] = false;
+            }
+            else if(filterType !== MONEY_FILTER_TYPE_INCOME && viewType === MONEY_VIEW_TYPE_CATEGORY) {
+                copyFilterList[MONEY_FILTER_TYPE_INCOME] = false;
+            }
+        }
+
+        setFilterList(copyFilterList);
+    }
+
+    const viewRefList = [useRef(), useRef()];
+
+    useEffect(() => {
+
+        console.log(viewRefList);
+
+        for( let i = 0 ; i < viewRefList.length ; i++) {
+            if(i === viewType) {
+                // filterRefList[i].current.style.backgroundColor = "#80ff80";
+                // filterRefList[i].current.style.color = "white";
+                viewRefList[i].current.style.borderBottom = "2px solid #00ff00";
+            } else {
+                // filterRefList[i].current.style.backgroundColor = "white";
+                // filterRefList[i].current.style.color = "#8f8f8f";
+                viewRefList[i].current.style.borderBottom = "0px solid #00ff00";
+
+            }
+        }
+
+    }, [viewType]);
+
+    const filterRefList = [useRef(), useRef(), useRef()];
+
+    useEffect(() => {
+
+        console.log(filterList);
+        for( let i = 0 ; i < filterRefList.length ; i++) {
+            if(filterList[i]) {
+                filterRefList[i].current.style.backgroundColor = "#80ff80";
+                filterRefList[i].current.style.color = "white";
+                filterRefList[i].current.style.border = "1px solid white";
+            } else {
+                filterRefList[i].current.style.backgroundColor = "white";
+                filterRefList[i].current.style.color = "#8f8f8f";
+                filterRefList[i].current.style.border = "1px solid #d0d0d0";
+            }
+        }
+
+    }, [filterList]);
+
     return(
         <MoneyContext.Provider value={{store, loadMoneyTaskList, getMainCategoryNameByNo, getSubCategoryNameByNo, getMainCategoryNameBySubCategoryNo}}>
             <div ref={moneyPageDiv} className={css.moneyPageDiv}>
-                <div className={css.moneyTitleDiv}>가계부</div>
                 <MoneyDateComponent />
-                <div id="DateDiv" className={css.moneyDateDiv}>
+                <div id="viewTypeDiv" className={css.viewTypeDiv}>
+                    <div ref={viewRefList[MONEY_VIEW_TYPE_TIME]} className={css.viewTypeTextDiv} onClick={ () => clickView(MONEY_VIEW_TYPE_TIME)}>날짜별</div>
+                    <div ref={viewRefList[MONEY_VIEW_TYPE_CATEGORY]} className={css.viewTypeTextDiv} onClick={ () => clickView(MONEY_VIEW_TYPE_CATEGORY)}>카테고리별</div>
                 </div>
-                <div id="moneySumDiv" className={css.moneySumDiv}>
-                    {/*<div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
-                    <div id="plusMoneyDiv" className={css.plusMoneyDiv}> 수입 : {plusMoney}원</div>
-                    <div id="minusMoneyDiv" className={css.minusMoneyDiv}> 지출 : {minusMoney}원</div>
+                <div className={css.filterTypeDiv}>
+                    <div className={css.filterTypeContentDiv}>
+                        <div ref={filterRefList[MONEY_FILTER_TYPE_INCOME]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_INCOME)}>수입</div>
+                        <div className={css.filterTypePlusTextDiv}>{plusMoney}원</div>
+                    </div>
+                    <div className={css.filterTypeContentDiv}>
+                        <div ref={filterRefList[MONEY_FILTER_TYPE_FIXED_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FIXED_SPEND)}>필수지출</div>
+                        <div className={css.filterTypeTextDiv}>{minusMoney}원</div>
+                    </div>
+                    <div className={css.filterTypeContentDiv}>
+                        <div ref={filterRefList[MONEY_FILTER_TYPE_FREE_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FREE_SPEND)}>비필수지출</div>
+                        <div className={css.filterTypeTextDiv}>0원</div>
+                    </div>
                 </div>
+
+
+                {/*<div id="moneySumDiv" className={css.moneySumDiv}>*/}
+                {/*    <div id="plusMoneyDiv" className={css.plusMoneyDiv}>{plusMoney}원</div>*/}
+                {/*    <div id="minusMoneyDiv" className={css.minusMoneyDiv}>{minusMoney}원</div>*/}
+                {/*    <div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
+                {/*</div>*/}
                 <div ref={moneyComponentDiv} className={css.moneyComponentDiv}>
                     {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} today={props.today} moneyTaskList={moneyTaskListWithFilter}/> }
                     {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }

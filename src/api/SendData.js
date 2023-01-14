@@ -12,7 +12,6 @@ function SendData(api, data, callback, err) {
     if(isOnline) {
         // 서버 전송 후 로그인 처리
         axios.post(
-
             url + api,
             data,
             {

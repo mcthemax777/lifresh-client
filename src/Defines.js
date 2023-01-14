@@ -11,6 +11,13 @@ export const PERIOD_TYPE_MONTH = 2;
 export const PERIOD_TYPE_YEAR = 3;
 export const PERIOD_TYPE_CUSTOM = 4;
 
+export const MONEY_VIEW_TYPE_TIME = 0;
+export const MONEY_VIEW_TYPE_CATEGORY = 1;
+
+export const MONEY_FILTER_TYPE_INCOME = 0;
+export const MONEY_FILTER_TYPE_FIXED_SPEND = 1;
+export const MONEY_FILTER_TYPE_FREE_SPEND = 2;
+
 export const checkIsToday = (today, startTime) => {
     return today.getFullYear() === startTime.getFullYear() &&
         today.getMonth() === startTime.getMonth() &&
@@ -56,11 +63,14 @@ export function currentTime() {
     return today.toISOString().replace('T', ' ').substring(0, 19);
 }
 
+export function convertDateTimeToString(date) {
+    date.setHours(date.getHours() + 9);
+    return date.toISOString().replace('T', ' ').substring(0, 19);
+}
+
 export function convertDateTimeLocalToTime(dateTimeLocal) {
     dateTimeLocal += ":00";
     return dateTimeLocal.replace('T', ' ').substring(0, 19);
-
-
 }
 
 export function convertStringToDateTime(dateStr) {

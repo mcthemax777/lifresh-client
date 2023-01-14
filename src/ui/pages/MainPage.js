@@ -95,8 +95,33 @@ function MainPage() {
         setPeriodType(Number(e.target.value));
     }
 
+    const changeDisplay = () => {
+
+        console.log("ff");
+        if(isSchedulePageDisplay && isToDoPageDisplay && isMoneyPageDisplay) {
+
+        } else {
+            if(isSchedulePageDisplay) {
+                setIsToDoPageDisplay(true);
+                setIsSchedulePageDisplay(false);
+            }
+
+            if(isToDoPageDisplay) {
+                setIsMoneyPageDisplay(true);
+                setIsToDoPageDisplay(false);
+            }
+
+            if(isMoneyPageDisplay) {
+                setIsSchedulePageDisplay(true);
+                setIsMoneyPageDisplay(false);
+            }
+        }
+
+    }
+
     return(
         <div className="defaultReactDiv">
+            {/*<button onClick={changeDisplay} className={css.menuDiv} value="MENU">MENU</button>*/}
             {/*<MenuComponent clickCategoryBtn={clickCategoryBtn}></MenuComponent>*/}
             {/*<DateComponent isMoneyPageDisplay={isMoneyPageDisplay} isToDoPageDisplay={isToDoPageDisplay} isSchedulePageDisplay={isSchedulePageDisplay} setIsMoneyPageDisplay={setIsMoneyPageDisplay} setIsToDoPageDisplay={setIsToDoPageDisplay} setIsSchedulePageDisplay={setIsSchedulePageDisplay} today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>*/}
             <div className={css.plannerContent}>

@@ -86,6 +86,9 @@ function DateComponent(props) {
 
     }, [store.periodType]);
 
+
+
+
     const clickChangeDateBtn = (num) => {
 
         let newStartDate = new Date(store.startDate);
@@ -156,6 +159,12 @@ function DateComponent(props) {
         store.setPeriodType(Number(e.target.value));
     }
 
+    const periodSelect = useRef();
+
+    useEffect(() => {
+        periodSelect.current.options[store.periodType].selected = true;
+    }, []);
+
     return(
         <div id="componentDiv" className={css.componentDiv}>
             <div id="dateDiv" className={css.dateDiv}>
@@ -173,12 +182,12 @@ function DateComponent(props) {
             </div>
             {/*<div className={css.periodMenu}>*/}
                 {/*<label htmlFor="periodMenu"></label>*/}
-                <select id="periodMenu" className={css.periodSelect} onChange={clickPeriodBtn} >
-                    <option id="dayScheduleBtn" value="0">일일</option>
-                    <option id="weekScheduleBtn" value="1">주간</option>
-                    <option id="monthScheduleBtn" value="2">월간</option>
-                    <option id="yearScheduleBtn" value="3">연간</option>
-                    <option id="customDateBtn" value="4">기간설정</option>
+                <select ref={periodSelect} className={css.periodSelect} onChange={clickPeriodBtn} >
+                    <option id="dayScheduleBtn" value={PERIOD_TYPE_DAY}>일일</option>
+                    <option id="weekScheduleBtn" value={PERIOD_TYPE_WEEK}>주간</option>
+                    <option id="monthScheduleBtn" value={PERIOD_TYPE_MONTH}>월간</option>
+                    <option id="yearScheduleBtn" value={PERIOD_TYPE_YEAR}>연간</option>
+                    <option id="customDateBtn" value={PERIOD_TYPE_CUSTOM}>기간설정</option>
                 </select>
             {/*</div>*/}
         </div>
