@@ -93,14 +93,20 @@
     height: 100%;
 }
 
+.addDiv {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 1em 1em 4px 4px;
+}
+
 .moneyComponentDiv {
     width: 100%;
     height: calc(100% - 112px);
 }
-
-
-
-
 
 .plusMoneyDiv {
     display: flex;

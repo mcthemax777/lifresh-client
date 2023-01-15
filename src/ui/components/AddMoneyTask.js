@@ -1,8 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
 import '../../Global.css';
-import {checkErrorResponse, convertDateTimeLocalToTime, isNumeric} from "../../Defines";
+import {
+    checkErrorResponse,
+    convertDateTimeLocalToTime,
+    isNumeric, MONEY_ADD_TYPE_MINUS, MONEY_ADD_TYPE_PLUS, MONEY_MINUS_TYPE_FIXED, MONEY_MINUS_TYPE_FREE,
+} from "../../Defines";
 import css from './AddMoneyTask.module.css'
 import {MoneyContext} from "../pages/MoneyPage";
 
@@ -13,6 +17,12 @@ function AddMoneyTask(props) {
     const plusMoney = "수입";
     const minusMoney = "지출";
 
+    let isSettingCorrect = false;
+    const [title, setTitle] = useState('추가');
+    const [moneyTaskNo, setMoneyTaskNo] = useState(0);
+    const [addMoneyType, setAddMoneyType] = useState(MONEY_ADD_TYPE_MINUS);
+    const [priority, setPriority] = useState(MONEY_MINUS_TYPE_FIXED);
+
     const [selectedMainCategoryNo, setSelectedMainCategoryNo] = useState(0);
     const [selectedSubCategoryNo, setSelectedSubCategoryNo] = useState(0);
 
@@ -21,17 +31,51 @@ function AddMoneyTask(props) {
 
     useEffect(() => {
         console.log("start addMoneyTask Component");
+        console.log(props);
+
+        //수정에서 호출했음
+        if(props.moneyTask !== undefined) {
+            setTitle('수정');
+            isSettingCorrect = true;
+            setMoneyTaskNo(props.moneyTask.moneyTaskNo);
+
+            pmSelectRef.current.options[props.moneyTask.categoryType].selected = true;
+            setAddMoneyType(props.moneyTask.categoryType);
+
+
+
+
+
+
+
+
+            moneyRef.current.value = props.moneyTask.money;
+        } else {
+            setAddMoneyType(MONEY_ADD_TYPE_MINUS)
+            pmSelectRef.current.options[MONEY_ADD_TYPE_MINUS].selected = true;
+        }
+
     }, []);
 
     const closeAddMoneyTask = () => {
-        store.setIsAddTask(false);
+        props.closeFunc();
     }
 
     const addMoneyTask = (response) => {
-        const pmSelect = document.getElementById('pmSelect');
-        const pmType = pmSelect.options[pmSelect.selectedIndex].value;
-        const moneyValue = document.getElementById('money').value;
+        const moneyValue = moneyRef.current.value;
         const dateTimeLocal = document.getElementById('dateTime').value;
+        let overMoney = 0;
+        if(addMoneyType === MONEY_ADD_TYPE_MINUS && priority === MONEY_MINUS_TYPE_FREE) {
+            const overMoneyValue = overMoneyRef.current.value;
+
+            //숫자가 아닐 경우 에러
+            if (isNumeric(overMoneyValue) === false) {
+                alert("비필수금액 - 숫자를 입력하세요.");
+                return;
+            }
+
+            overMoney = Number(overMoneyValue);
+        }
 
         //분류가 되지 않은 경우
         if(selectedMainCategoryNo === 0 || selectedSubCategoryNo === 0) {
@@ -45,11 +89,19 @@ function AddMoneyTask(props) {
             return;
         }
 
+
+
         let money = Number(moneyValue);
 
         //돈 입력 안했을 경우
         if(money <= 0) {
             alert("0보다 큰 입력하세요.");
+            return;
+        }
+
+        //비필수금액이 현재돈보다 클 수 없음
+        if(money < overMoney) {
+            alert("비필수 금액이 사용금액보다 큽니다.");
             return;
         }
 
@@ -59,12 +111,12 @@ function AddMoneyTask(props) {
             return;
         }
 
+        if(addMoneyType === MONEY_ADD_TYPE_PLUS && priority === MONEY_MINUS_TYPE_FREE) {
+            alert("수입은 비필수가 없습니다.");
+        }
+
         const dateTime = convertDateTimeLocalToTime(dateTimeLocal);
 
-        console.log(dateTime);
-
-        //지출일 경우 마이너스 추가해주기
-        if(pmType === '2') money *= -1;
 
         // eslint-disable-next-line no-restricted-globals
         var addConfirm = confirm(" 데이터를 추가하시겠습니까?");
@@ -73,11 +125,15 @@ function AddMoneyTask(props) {
             const detail = document.getElementById('detail').value;
 
             const addMoneyTaskObj = {
-                moneyTaskNo: 0,
+                moneyTaskNo: moneyTaskNo,
+                categoryType: addMoneyType,
+                mainCategoryNo: selectedMainCategoryNo,
                 subCategoryNo: selectedSubCategoryNo,
                 startTime: dateTime,
                 endTime: dateTime,
                 money: money,
+                overMoney: overMoney,
+                priority: priority,
                 detail: detail,
                 type: 0,
                 todayNo: 0
@@ -115,6 +171,7 @@ function AddMoneyTask(props) {
 
         //인풋 데이터 초기화
         reset();
+        props.closeFunc();
 
         //데이터 추가(TODO. 서버에서 데이터 내려주면 주석 풀기)
         // let copyMoneyTaskList = [...store.moneyTaskList];
@@ -147,15 +204,15 @@ function AddMoneyTask(props) {
     }
 
     const reset = () => {
-        const pmSelect = document.getElementById('pmSelect');
-        pmSelect.selectedIndex=1;
-        document.getElementById('money').value = 0;
+        pmSelectRef.current.selectedIndex = MONEY_ADD_TYPE_MINUS;
+        moneyRef.current.value = '';
         document.getElementById('detail').value = '';
 
         setSelectedMainCategoryNo(0);
-        const mainCategorySelect = document.getElementById('mainCategorySelect');
-        mainCategorySelect.selectedIndex = 0;
+        mainCategorySelectRef.current.selectedIndex = 0;
     };
+
+
 
     const handleMainCategorySelect = (e) => {
 
@@ -176,24 +233,79 @@ function AddMoneyTask(props) {
         setSelectedSubCategoryNo(Number(e.target.value));
     }
 
+    const pmSelectRef = useRef();
+
+    useEffect(() => {
+        if(addMoneyType === MONEY_ADD_TYPE_PLUS) {
+            setPriority(MONEY_MINUS_TYPE_FIXED);
+        }
+
+        if(isSettingCorrect) {
+            let len = mainCategorySelectRef.current.options.length; //select box의 option 갯수
+            console.log(props.moneyTask.mainCategoryNo);
+
+            //select box의 option 갯수만큼 for문 돌림
+            for (let i=0; i<len; i++){
+                console.log(mainCategorySelectRef.current.options[i].value);
+
+                //select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+                if(Number(mainCategorySelectRef.current.options[i].value) === Number(props.moneyTask.mainCategoryNo)){
+                    mainCategorySelectRef.current.options[i].selected = true;
+                }
+            }
+
+            setSelectedMainCategoryNo(props.moneyTask.mainCategoryNo);
+        }
+
+    }, [addMoneyType]);
+
+    useEffect(() => {
+
+        if(isSettingCorrect) {
+            let len = subCategorySelectRef.current.options.length; //select box의 option 갯수
+            //select box의 option 갯수만큼 for문 돌림
+            for (let i=0; i<len; i++){
+                //select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+                if(Number(subCategorySelectRef.current.options[i].value) === Number(props.moneyTask.subCategoryNo)){
+                    subCategorySelectRef.current.options[i].selected = true;
+                }
+            }
+            setSelectedSubCategoryNo(props.moneyTask.subCategoryNo);
+        }
+
+    }, [selectedMainCategoryNo]);
+
+    const minusTypeSelectRef = useRef();
+    const moneyRef = useRef();
+    const overMoneyRef = useRef();
+    const mainCategorySelectRef = useRef();
+    const subCategorySelectRef = useRef();
+    const dateTimeRef = useRef();
+    const detailRef = useRef();
 
     return(
         <div className={css.addMoneyTaskDiv}>
-            <h2>추가</h2>
-            <div className={css.addMoneyTaskContent}> 금액 : <input id='money' type='text' className={css.addMoneyTaskContent1}/></div>
-            <div className={css.addMoneyTaskContent}> 타입 : <select id='pmSelect' className={css.addMoneyTaskContent1}><option value='1'>{plusMoney}</option><option value='2'>{minusMoney}</option></select></div>
+            <h2>{title}</h2>
+            <div className={css.addMoneyTaskContent}> 금액 : <input ref={moneyRef} type='text' className={css.addMoneyTaskContent1}/></div>
+            <div className={css.addMoneyTaskContent}> 타입 :
+                <select ref={pmSelectRef} className={css.addMoneyTaskContent1} onChange={(e) => setAddMoneyType(Number(e.target.value))}>
+                    <option value={MONEY_ADD_TYPE_MINUS}>{minusMoney}</option>
+                    <option value={MONEY_ADD_TYPE_PLUS}>{plusMoney}</option>
+                </select>
+            </div>
             <div className={css.addMoneyTaskContent}> 대분류 :
-                <select onChange={handleMainCategorySelect} id="mainCategorySelect" className={css.addMoneyTaskContent1}>
+                <select onChange={handleMainCategorySelect} ref={mainCategorySelectRef} className={css.addMoneyTaskContent1}>
                     <option value='0'>=== 선택 ===</option>
                     {
                         store.mainCategoryList.map((mainCategory, index) => (
+                            Number(addMoneyType) === Number(mainCategory.categoryType) &&
                             <option key={index} value={mainCategory.mainCategoryNo}>{mainCategory.name}</option>
                         ))
                     }
                 </select>
             </div>
             <div className={css.addMoneyTaskContent}> 중분류 :
-                <select onChange={handleSubCategorySelect} id="subCategorySelect" className={css.addMoneyTaskContent1}>
+                <select onChange={handleSubCategorySelect} ref={subCategorySelectRef} className={css.addMoneyTaskContent1}>
                     <option value='0'>=== 선택 ===</option>
                     {
                         store.subCategoryList.map((subCategory, index) => (
@@ -203,8 +315,23 @@ function AddMoneyTask(props) {
                     }
                 </select>
             </div>
-            <div className={css.addMoneyTaskContent}> 사용날짜 : <input id='dateTime' type='datetime-local' className={css.addMoneyTaskContent1}/></div>
-            <div className={css.addMoneyTaskContent}> 설명 : <input id='detail' type='text' className={css.addMoneyTaskContent1}/></div>
+            {
+                addMoneyType === MONEY_ADD_TYPE_MINUS ?
+                <div className={css.addMoneyTaskContent}> 지출고급세팅 :
+                    <select ref={minusTypeSelectRef} className={css.addMoneyTaskContent1} onChange={(e) => setPriority(Number(e.target.value))}>
+                        <option value={MONEY_MINUS_TYPE_FIXED}>필수지출</option>
+                        <option value={MONEY_MINUS_TYPE_FREE}>비필수지출</option>
+                    </select>
+                </div> : <div/>
+            }
+            {
+                priority === MONEY_MINUS_TYPE_FREE ?
+                <div className={css.addMoneyTaskContent}> 불필요사용금액 :
+                    <input ref={overMoneyRef} type='text' className={css.addMoneyTaskContent1}/>
+                </div> : <div/>
+            }
+            <div className={css.addMoneyTaskContent}> 사용날짜 : <input ref={dateTimeRef} type='datetime-local' className={css.addMoneyTaskContent1}/></div>
+            <div className={css.addMoneyTaskContent}> 설명 : <input ref={detailRef} type='text' className={css.addMoneyTaskContent1}/></div>
             <button  className={css.addMoneyTaskContent} onClick={addMoneyTask}>등록</button>
             <button  className={css.addMoneyTaskContent} onClick={closeAddMoneyTask}>취소</button>
 

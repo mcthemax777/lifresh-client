@@ -13,7 +13,7 @@ import {
     convertStringToDateTime,
     MONEY_FILTER_TYPE_INCOME,
     MONEY_VIEW_TYPE_CATEGORY,
-    MONEY_FILTER_TYPE_FIXED_SPEND, MONEY_FILTER_TYPE_FREE_SPEND
+    MONEY_FILTER_TYPE_FIXED_SPEND, MONEY_FILTER_TYPE_FREE_SPEND, MONEY_ADD_TYPE_PLUS
 } from "../../Defines";
 import css from "./MoneyPage.module.css";
 import MoneyDayComponent from "../components/MoneyDayComponent";
@@ -112,6 +112,9 @@ function MoneyPage(props) {
             if(a.startTime < b.startTime) return 1;
         });
 
+        console.log("receive data");
+        console.log(data);
+
         setMainCategoryList(data.mainCategoryList);
         setSubCategoryList(data.subCategoryList);
         setMoneyTaskList(data.moneyTaskList);
@@ -154,9 +157,7 @@ function MoneyPage(props) {
 
                 newMoneyTaskListWithFilter.push(moneyTask);
 
-
-
-                if(moneyTask.money > 0) newPlusMoney += moneyTask.money;
+                if(moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
                 else newMinusMoney +=moneyTask.money;
             }
         }
@@ -179,20 +180,20 @@ function MoneyPage(props) {
         return "NONE";
     }
 
-    const getMainCategoryNameBySubCategoryNo = (subCategoryNo) => {
-
-        for(let i = 0 ; i < subCategoryList.length ; i++) {
-            if (Number(subCategoryList[i].subCategoryNo) === subCategoryNo) {
-                for(let j = 0 ; j < mainCategoryList.length ; j++) {
-                    if (Number(mainCategoryList[j].mainCategoryNo) === Number(subCategoryList[i].mainCategoryNo)) {
-                        return mainCategoryList[j].name;
-                    }
-                }
-            }
-        }
-
-        return "NONE";
-    }
+    // const getMainCategoryNameBySubCategoryNo = (subCategoryNo) => {
+    //
+    //     for(let i = 0 ; i < subCategoryList.length ; i++) {
+    //         if (Number(subCategoryList[i].subCategoryNo) === subCategoryNo) {
+    //             for(let j = 0 ; j < mainCategoryList.length ; j++) {
+    //                 if (Number(mainCategoryList[j].mainCategoryNo) === Number(subCategoryList[i].mainCategoryNo)) {
+    //                     return mainCategoryList[j].name;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     return "NONE";
+    // }
 
     const getSubCategoryNameByNo = (subCategoryNo) => {
 
@@ -302,7 +303,7 @@ function MoneyPage(props) {
     }, [filterList]);
 
     return(
-        <MoneyContext.Provider value={{store, loadMoneyTaskList, getMainCategoryNameByNo, getSubCategoryNameByNo, getMainCategoryNameBySubCategoryNo}}>
+        <MoneyContext.Provider value={{store, loadMoneyTaskList, getMainCategoryNameByNo, getSubCategoryNameByNo}}>
             <div ref={moneyPageDiv} className={css.moneyPageDiv}>
                 <MoneyDateComponent />
                 <div id="viewTypeDiv" className={css.viewTypeDiv}>
@@ -341,7 +342,7 @@ function MoneyPage(props) {
                     { addTaskBtn === 1 && <img src={moneyAddTaskBtnClickPath} width={64} height={64}  alt='추가'/> }
                 </button>
                 {
-                    isAddTask === true ? <AddMoneyTask/> : <div></div>
+                    isAddTask === true ? <div className={css.addDiv}><AddMoneyTask closeFunc={() => setIsAddTask(false)}/></div> : <div></div>
                 }
             </div>
         </MoneyContext.Provider>

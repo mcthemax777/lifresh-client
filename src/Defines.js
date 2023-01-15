@@ -18,6 +18,13 @@ export const MONEY_FILTER_TYPE_INCOME = 0;
 export const MONEY_FILTER_TYPE_FIXED_SPEND = 1;
 export const MONEY_FILTER_TYPE_FREE_SPEND = 2;
 
+export const MONEY_ADD_TYPE_MINUS = 0;
+export const MONEY_ADD_TYPE_PLUS = 1;
+
+export const MONEY_MINUS_TYPE_FIXED = 0;
+export const MONEY_MINUS_TYPE_FREE = 1;
+
+
 export const checkIsToday = (today, startTime) => {
     return today.getFullYear() === startTime.getFullYear() &&
         today.getMonth() === startTime.getMonth() &&
