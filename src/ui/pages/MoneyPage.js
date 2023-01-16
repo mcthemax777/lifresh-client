@@ -32,6 +32,7 @@ function MoneyPage(props) {
     const [mainCategoryList, setMainCategoryList] = useState([]);
     const [subCategoryList, setSubCategoryList] = useState([]);
     const [moneyTaskList, setMoneyTaskList] = useState([]);
+    const [freeMinusMoney, setFreeMinusMoney] = useState(0);
     const [minusMoney, setMinusMoney] = useState(0);
     const [plusMoney, setPlusMoney] = useState(0);
     const [isAddTask, setIsAddTask] = useState(false);
@@ -145,6 +146,7 @@ function MoneyPage(props) {
         let newMoneyTaskListWithFilter = [];
         let newPlusMoney = 0;
         let newMinusMoney = 0;
+        let newFreeMinusMoney = 0;
 
         for(let i = 0; i < moneyTaskList.length; i++) {
 
@@ -158,13 +160,20 @@ function MoneyPage(props) {
                 newMoneyTaskListWithFilter.push(moneyTask);
 
                 if(moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
-                else newMinusMoney +=moneyTask.money;
+                else {
+                    if(moneyTask.overMoney > 0) {
+                        newFreeMinusMoney += moneyTask.overMoney;
+                    }
+
+                    newMinusMoney +=moneyTask.money;
+                }
             }
         }
 
         setMoneyTaskListWithFilter(newMoneyTaskListWithFilter);
         setPlusMoney(newPlusMoney);
         setMinusMoney(newMinusMoney);
+        setFreeMinusMoney(newFreeMinusMoney);
 
     }, [startDate, endDate, moneyTaskList, viewType, filterList]);
 
@@ -302,8 +311,33 @@ function MoneyPage(props) {
 
     }, [filterList]);
 
+    let closeDetail = undefined;
+    let moneyTaskNo = 0;
+
+    const setActiveDetail = (newMoneyTaskNo, newCloseDetail) => {
+
+        if(moneyTaskNo === newMoneyTaskNo) {
+            moneyTaskNo = 0;
+            closeDetail = undefined;
+
+            return ;
+        }
+
+        //기존 창 닫기
+        if(closeDetail !== undefined) {
+            console.log("setActiveDetail");
+
+            closeDetail();
+
+        }
+
+        moneyTaskNo = newMoneyTaskNo;
+        closeDetail = newCloseDetail;
+
+    }
+
     return(
-        <MoneyContext.Provider value={{store, loadMoneyTaskList, getMainCategoryNameByNo, getSubCategoryNameByNo}}>
+        <MoneyContext.Provider value={{store, loadMoneyTaskList, getMainCategoryNameByNo, getSubCategoryNameByNo, setActiveDetail}}>
             <div ref={moneyPageDiv} className={css.moneyPageDiv}>
                 <MoneyDateComponent />
                 <div id="viewTypeDiv" className={css.viewTypeDiv}>
@@ -321,7 +355,7 @@ function MoneyPage(props) {
                     </div>
                     <div className={css.filterTypeContentDiv}>
                         <div ref={filterRefList[MONEY_FILTER_TYPE_FREE_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FREE_SPEND)}>비필수지출</div>
-                        <div className={css.filterTypeTextDiv}>0원</div>
+                        <div className={css.filterTypeTextDiv}>{freeMinusMoney}원</div>
                     </div>
                 </div>
 

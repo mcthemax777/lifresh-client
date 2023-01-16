@@ -63,7 +63,8 @@ function AddMoneyTask(props) {
 
     const addMoneyTask = (response) => {
         const moneyValue = moneyRef.current.value;
-        const dateTimeLocal = document.getElementById('dateTime').value;
+        const dateTimeLocal = dateTimeRef.current.value;
+        const detail = detailRef.current.value;
         let overMoney = 0;
         if(addMoneyType === MONEY_ADD_TYPE_MINUS && priority === MONEY_MINUS_TYPE_FREE) {
             const overMoneyValue = overMoneyRef.current.value;
@@ -121,8 +122,6 @@ function AddMoneyTask(props) {
         // eslint-disable-next-line no-restricted-globals
         var addConfirm = confirm(" 데이터를 추가하시겠습니까?");
         if (addConfirm === true) {
-
-            const detail = document.getElementById('detail').value;
 
             const addMoneyTaskObj = {
                 moneyTaskNo: moneyTaskNo,
@@ -200,13 +199,15 @@ function AddMoneyTask(props) {
     }
 
     const addMoneyTaskListErr = (response) => {
-        console.log("addMoneyTaskListErr" + response);
+        console.log("addMoneyTaskListErr");
+        console.log(response);
+
     }
 
     const reset = () => {
         pmSelectRef.current.selectedIndex = MONEY_ADD_TYPE_MINUS;
         moneyRef.current.value = '';
-        document.getElementById('detail').value = '';
+        detailRef.current.value = '';
 
         setSelectedMainCategoryNo(0);
         mainCategorySelectRef.current.selectedIndex = 0;

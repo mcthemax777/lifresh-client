@@ -71,6 +71,7 @@ function MoneyContentDetail(props) {
 
     const closeFunc = () => {
         setIsCorrectTask(false);
+        props.closeFunc();
     }
 
     return (

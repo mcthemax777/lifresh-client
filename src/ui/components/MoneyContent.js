@@ -1,69 +1,26 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import css from "./MoneyDayComponent.module.css";
-import {checkErrorResponse, MONEY_ADD_TYPE_PLUS} from "../../Defines";
-import SendData from "../../api/SendData";
+import {MONEY_ADD_TYPE_PLUS} from "../../Defines";
 import {MoneyContext} from "../pages/MoneyPage";
-import {useNavigate} from "react-router-dom";
 import MoneyContentDetail from "./MoneyContentDetail";
-import AddMoneyTask from "./AddMoneyTask";
 function MoneyContent(props) {
 
-    const navigate = useNavigate();
-    const { store, getMainCategoryNameByNo, getSubCategoryNameByNo } = useContext(MoneyContext);
+    const { store, getMainCategoryNameByNo, getSubCategoryNameByNo, setActiveDetail } = useContext(MoneyContext);
 
     const [isClicked, setIsClicked] = useState(false);
-
-    const removeTaskBtnPath = "img/remove_task_btn.png";
-
-    const removeMoneyTaskListCallback = (response, sendData) => {
-
-        const data = response.data;
-
-        if(checkErrorResponse(data, navigate) === false)
-        {
-            return ;
-        }
-
-
-        let copyMoneyTaskList = [...store.moneyTaskList];
-
-        for( let i = 0; i < copyMoneyTaskList.length; i++) {
-            if ( sendData.moneyTaskNoList.includes(copyMoneyTaskList[i].moneyTaskNo)) {
-                copyMoneyTaskList.splice(i, 1);
-            }
-        }
-
-        store.setMoneyTaskList(copyMoneyTaskList);
-    }
-
-    const removeMoneyTaskListErr = (response) => {
-        console.log("removeMoneyTaskListErr" + response);
-    }
-
-    const removeMoneyTask = (moneyTaskNo) => {
-
-        const uid = localStorage.getItem("uid");
-        const sid = localStorage.getItem("sid");
-
-        console.log("remove - moneyTaskNo : " + moneyTaskNo);
-
-        SendData("removeMoneyTaskList",
-            {
-                uid: uid,
-                sid: sid,
-                moneyTaskNoList: [moneyTaskNo]
-            },
-            removeMoneyTaskListCallback,
-            removeMoneyTaskListErr
-        );
-    }
 
     const dollarIconPath = 'img/dollar_icon.png';
 
     const onClick = () => {
-        console.log(isClicked);
-        if(isClicked) setIsClicked(false);
-        else setIsClicked(true);
+        console.log(this);
+        if(isClicked) {
+            setActiveDetail(props.moneyTask.moneyTaskNo, undefined);
+            setIsClicked(false);
+        } else {
+            //다른 detail 창 닫기
+            setActiveDetail(props.moneyTask.moneyTaskNo, closeDetail);
+            setIsClicked(true);
+        }
     }
 
     useEffect(() => {
@@ -76,6 +33,10 @@ function MoneyContent(props) {
     }, []);
 
     const dayMoneyTaskMoneyDiv = useRef();
+
+    const closeDetail = () => {
+        setIsClicked(false);
+    }
 
     return (
         <div className={css.dayMoneyTaskWithDetailDiv}>
@@ -91,7 +52,7 @@ function MoneyContent(props) {
                 {/*</button>*/}
             </div>
             {
-                isClicked === true ? <MoneyContentDetail moneyTask={props.moneyTask}/> : <div/>
+                isClicked === true ? <MoneyContentDetail moneyTask={props.moneyTask} closeFunc={closeDetail}/> : <div/>
             }
 
         </div>
