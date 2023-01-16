@@ -64,7 +64,7 @@ function MoneyContent(props) {
 
             } else if(store.filterList[MONEY_FILTER_TYPE_FIXED_SPEND]) {
                 dayMoneyTaskMoneyDiv.current.style.color = "#2f2f2f";
-                newMoneyText = "-" + props.moneyTask.money;
+                newMoneyText = "-" + (props.moneyTask.money - props.moneyTask.overMoney);
             } else if(store.filterList[MONEY_FILTER_TYPE_FREE_SPEND]) {
                 dayMoneyTaskMoneyDiv.current.style.color = "#ff1f1f";
                 newMoneyText = "-" + props.moneyTask.overMoney;

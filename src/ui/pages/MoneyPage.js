@@ -162,19 +162,17 @@ function MoneyPage(props) {
                     passFilter = false;
                 } else if(filterList[MONEY_FILTER_TYPE_FIXED_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney === 0)) {
                     passFilter = false;
-                } else if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney !== 0)) {
+                } else if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney === moneyTask.money)) {
                     passFilter = false;
                 }
 
                 if(passFilter) newMoneyTaskListWithFilter.push(moneyTask);
 
                 if(filterList[MONEY_FILTER_TYPE_INCOME] && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
-                else {
-                    if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] && moneyTask.overMoney > 0) {
-                        newFreeMinusMoney += moneyTask.overMoney;
-                    } else if(filterList[MONEY_FILTER_TYPE_FIXED_SPEND] && moneyTask.overMoney === 0) {
-                        newMinusMoney +=moneyTask.money;
-                    }
+                else if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] && moneyTask.overMoney > 0) {
+                    newFreeMinusMoney += moneyTask.overMoney;
+                } else if(filterList[MONEY_FILTER_TYPE_FIXED_SPEND] && moneyTask.categoryType === MONEY_ADD_TYPE_MINUS) {
+                    newMinusMoney += (moneyTask.money - moneyTask.overMoney);
                 }
             }
         }
