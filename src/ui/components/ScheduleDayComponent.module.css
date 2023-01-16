@@ -13,7 +13,7 @@
 }
 
 .dayScheduleTimeScroll::-webkit-scrollbar {
-    width: 8px;  /* 스크롤바의 너비 */
+    width: 4px;  /* 스크롤바의 너비 */
 }
 
 .dayScheduleTimeScroll::-webkit-scrollbar-thumb {

@@ -14,7 +14,7 @@
 }
 
 .dayMoneyTimeScroll::-webkit-scrollbar {
-    width: 8px;  /* 스크롤바의 너비 */
+    width: 4px;  /* 스크롤바의 너비 */
 }
 
 .dayMoneyTimeScroll::-webkit-scrollbar-thumb {
@@ -250,8 +250,15 @@
 
 .dayMoneyTaskMoneyDiv {
     display: flex;
+    flex-direction: column;
     font-size: 20px;
     color: #0f0f0f;
     margin-right: 10px;
+    align-items: flex-end;
+
     flex-shrink: 0
+}
+
+.overMoneyTextDiv {
+    font-size: 10px;
 }

@@ -13,7 +13,7 @@ import {
     convertStringToDateTime,
     MONEY_FILTER_TYPE_INCOME,
     MONEY_VIEW_TYPE_CATEGORY,
-    MONEY_FILTER_TYPE_FIXED_SPEND, MONEY_FILTER_TYPE_FREE_SPEND, MONEY_ADD_TYPE_PLUS
+    MONEY_FILTER_TYPE_FIXED_SPEND, MONEY_FILTER_TYPE_FREE_SPEND, MONEY_ADD_TYPE_PLUS, MONEY_ADD_TYPE_MINUS
 } from "../../Defines";
 import css from "./MoneyPage.module.css";
 import MoneyDayComponent from "../components/MoneyDayComponent";
@@ -52,6 +52,7 @@ function MoneyPage(props) {
         startDate, setStartDate,
         endDate, setEndDate,
         periodType, setPeriodType,
+        filterList, setFilterList,
     }
 
     const uid = localStorage.getItem("uid");
@@ -154,18 +155,26 @@ function MoneyPage(props) {
             //기간 확인
             if(isBetweenPeriod(convertStringToDateTime(moneyTask.startTime))) {
 
+                let passFilter = true;
+
                 //필터 확인
-                if(moneyTask )
+                if(filterList[MONEY_FILTER_TYPE_INCOME] === false && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) {
+                    passFilter = false;
+                } else if(filterList[MONEY_FILTER_TYPE_FIXED_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney === 0)) {
+                    passFilter = false;
+                } else if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney !== 0)) {
+                    passFilter = false;
+                }
 
-                newMoneyTaskListWithFilter.push(moneyTask);
+                if(passFilter) newMoneyTaskListWithFilter.push(moneyTask);
 
-                if(moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
+                if(filterList[MONEY_FILTER_TYPE_INCOME] && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
                 else {
-                    if(moneyTask.overMoney > 0) {
+                    if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] && moneyTask.overMoney > 0) {
                         newFreeMinusMoney += moneyTask.overMoney;
+                    } else if(filterList[MONEY_FILTER_TYPE_FIXED_SPEND] && moneyTask.overMoney === 0) {
+                        newMinusMoney +=moneyTask.money;
                     }
-
-                    newMinusMoney +=moneyTask.money;
                 }
             }
         }
@@ -351,11 +360,11 @@ function MoneyPage(props) {
                     </div>
                     <div className={css.filterTypeContentDiv}>
                         <div ref={filterRefList[MONEY_FILTER_TYPE_FIXED_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FIXED_SPEND)}>필수지출</div>
-                        <div className={css.filterTypeTextDiv}>{minusMoney}원</div>
+                        <div className={css.filterTypeMinusTextDiv}>{minusMoney}원</div>
                     </div>
                     <div className={css.filterTypeContentDiv}>
                         <div ref={filterRefList[MONEY_FILTER_TYPE_FREE_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FREE_SPEND)}>비필수지출</div>
-                        <div className={css.filterTypeTextDiv}>{freeMinusMoney}원</div>
+                        <div className={css.filterTypeFreeMinusTextDiv}>{freeMinusMoney}원</div>
                     </div>
                 </div>
 

@@ -1,0 +1,17 @@
+.addMoneyTaskDiv {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: white;
+    border-radius: 1em 1em 4px 4px;
+}
+
+.addMoneyTaskContent {
+    display: flex;
+    justify-content: space-between;
+    text-align: right;
+}
+
+.addMoneyTaskContent1 {
+    width: 100px;
+}

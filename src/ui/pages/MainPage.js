@@ -63,7 +63,7 @@ function MainPage() {
         let windowWidth = windowDimensions.width;
         let windowHeight = windowDimensions.height;
 
-        if(windowWidth >= 700) {
+        if(windowWidth >= 1700) {
             setIsSchedulePageDisplay(true);
             setIsToDoPageDisplay(true);
             setIsMoneyPageDisplay(true);

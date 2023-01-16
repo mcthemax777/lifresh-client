@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import css from "./MoneyDayComponent.module.css";
 import DayMoneyTaskGroupList from "./DayMoneyTaskGroupList";
 import {MoneyContext} from "../pages/MoneyPage";
@@ -8,7 +8,7 @@ function MoneyDayComponent(props) {
 
     const dayMoneyTimeScroll = useRef();
     const dayMoneyTask = useRef();
-
+    const { store, } = useContext(MoneyContext);
 
     const [totalMoney, setTotalMoney] = useState(0);
     const [minusMoney, setMinusMoney] = useState(0);

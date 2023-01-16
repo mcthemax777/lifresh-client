@@ -24,37 +24,44 @@ function DayMoneyTaskGroupList(props) {
         switch (day) {
             case 1:
                 setDayText('월');
+                setDayText('mon');
                 dayMoneyTaskDayOfWeekDiv.current.style.backgroundColor = '#2f2f2f';
                 dayMoneyTaskDateDiv.current.style.color = '#2f2f2f';
                 break;
             case 2:
                 setDayText('화');
+                setDayText('tue');
                 dayMoneyTaskDayOfWeekDiv.current.style.backgroundColor = '#2f2f2f';
                 dayMoneyTaskDateDiv.current.style.color = '#2f2f2f';
                 break;
             case 3:
                 setDayText('수');
+                setDayText('wed');
                 dayMoneyTaskDayOfWeekDiv.current.style.backgroundColor = '#2f2f2f';
                 dayMoneyTaskDateDiv.current.style.color = '#2f2f2f';
                 break;
             case 4:
                 setDayText('목');
+                setDayText('thu');
                 dayMoneyTaskDayOfWeekDiv.current.style.backgroundColor = '#2f2f2f';
                 dayMoneyTaskDateDiv.current.style.color = '#2f2f2f';
                 break;
             case 5:
                 setDayText('금');
+                setDayText('fri');
                 dayMoneyTaskDayOfWeekDiv.current.style.backgroundColor = '#2f2f2f';
                 dayMoneyTaskDateDiv.current.style.color = '#2f2f2f';
                 break;
             case 6:
                 setDayText('토');
+                setDayText('sat');
                 dayMoneyTaskDayOfWeekDiv.current.style.backgroundColor = 'blue';
                 dayMoneyTaskDateDiv.current.style.color = 'blue';
 
                 break;
             case 0:
                 setDayText('일');
+                setDayText('sun');
                 dayMoneyTaskDayOfWeekDiv.current.style.backgroundColor = 'red';
                 dayMoneyTaskDateDiv.current.style.color = 'red';
 
@@ -69,7 +76,7 @@ function DayMoneyTaskGroupList(props) {
             <div ref={dayMoneyTaskDateDiv} className={css.dayMoneyTaskDateDiv}>
                 {groupDate}
                 <div ref={dayMoneyTaskDayOfWeekDiv} className={css.dayMoneyTaskDayOfWeekDiv}>
-                    {/*{dayText}*/}
+                    {dayText}
                 </div>
             </div>
             {
