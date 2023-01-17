@@ -14,8 +14,6 @@ function MoneyContent(props) {
 
     const [isClicked, setIsClicked] = useState(false);
 
-    const dollarIconPath = 'img/dollar_icon.png';
-
     const onClick = () => {
         console.log(this);
         if(isClicked) {
@@ -30,11 +28,69 @@ function MoneyContent(props) {
 
     useEffect(() => {
         console.log("useEffect[]")
+
+        const test = props.moneyTask.moneyTaskNo % 6;
+
+        switch (test)
+        {
+            case 0:
+            {
+                moneyManagerImgRef.current.src = 'img/moneyManager/cash.jpg';
+                moneyManagerImgRef.current.width = 42;
+                moneyManagerImgRef.current.height = 28;
+                break;
+            }
+            case 1:
+            {
+                moneyManagerImgRef.current.src = 'img/moneyManager/bank_kb.png';
+                moneyManagerImgRef.current.width = 42;
+                moneyManagerImgRef.current.height = 42;
+                break;
+            }
+            case 2:
+            {
+                moneyManagerImgRef.current.src = 'img/moneyManager/bank_sh.png';
+                moneyManagerImgRef.current.width = 42;
+                moneyManagerImgRef.current.height = 42;
+                break;
+            }
+            case 3:
+            {
+                moneyManagerImgRef.current.src = 'img/moneyManager/credit_card_kb.png';
+                moneyManagerImgRef.current.width = 42;
+                moneyManagerImgRef.current.height = 32;
+                break;
+            }
+            case 4:
+            {
+                moneyManagerImgRef.current.src = 'img/moneyManager/check_card_kb.png';
+                moneyManagerImgRef.current.width = 42;
+                moneyManagerImgRef.current.height = 32;
+                break;
+            }
+            case 5:
+            {
+                moneyManagerImgRef.current.src = 'img/moneyManager/check_card_sh.png';
+                moneyManagerImgRef.current.width = 42;
+                moneyManagerImgRef.current.height = 32;
+                break;
+            }
+            default:
+            {
+                moneyManagerImgRef.current.src = 'img/moneyManager/cash.png';
+                moneyManagerImgRef.current.width = 42;
+                moneyManagerImgRef.current.height = 42;
+                break;
+            }
+        }
+
         initText();
     }, []);
 
     useEffect(() => {
         console.log("useEffect[filterList]")
+
+
         initText();
     }, [store.filterList, props.moneyTask]);
 
@@ -92,11 +148,12 @@ function MoneyContent(props) {
     const wonText = '원';
 
     const overMoneyTextRef = useRef();
+    const moneyManagerImgRef = useRef();
 
     return (
         <div className={css.dayMoneyTaskWithDetailDiv}>
             <div className={css.dayMoneyTaskDiv} onClick={onClick}>
-                <div className={css.dayMoneyTaskMCDiv}>{<img src={dollarIconPath} width={42} height={42} alt='' />}</div>
+                <div className={css.dayMoneyTaskMCDiv}>{<img ref={moneyManagerImgRef}  alt='' />}</div>
                 <div className={css.dayMoneyTaskDetailDiv}>
                     <div className={css.dayMoneyTaskDetailCategoryDiv}>{getMainCategoryNameByNo(props.moneyTask.mainCategoryNo) + (getSubCategoryNameByNo(props.moneyTask.subCategoryNo) !== '기본' ? (" - " + getSubCategoryNameByNo(props.moneyTask.subCategoryNo)) : "")}</div>
                     <div className={css.dayMoneyTaskDetailTimeDiv} >{props.moneyTask.startTime.substring(10, 16)}</div>

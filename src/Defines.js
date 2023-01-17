@@ -25,6 +25,16 @@ export const MONEY_MINUS_TYPE_FIXED = 0;
 export const MONEY_MINUS_TYPE_FREE = 1;
 
 
+export const MONEY_MANAGER_TYPE_CASH = 0;
+export const MONEY_MANAGER_TYPE_BANK_BOOK = 1;
+export const MONEY_MANAGER_TYPE_CREDIT_CARD = 2;
+export const MONEY_MANAGER_TYPE_CHECK_CARD = 3;
+export const MONEY_MANAGER_TYPE_PREPAYMENT_CARD = 4;
+export const MONEY_MANAGER_TYPE_GIFT_CARD = 5;
+
+export const ADD_TYPE_MONEY_TASK = 0;
+export const ADD_TYPE_MONEY_MANAGER = 1;
+
 export const checkIsToday = (today, startTime) => {
     return today.getFullYear() === startTime.getFullYear() &&
         today.getMonth() === startTime.getMonth() &&

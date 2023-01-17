@@ -1,25 +1,9 @@
-.addDiv {
-    position: absolute;
+.addMoneyTaskDiv {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
     background: white;
     border-radius: 1em 1em 4px 4px;
-}
-
-.addTypeDiv {
-    display: flex;
-    flex: 0 0 30px;
-}
-
-.addTypeTextDiv {
-    display: flex;
-    flex: 1;
-    font-size: 14px;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 5px;
 }
 
 .addMoneyTaskContent {

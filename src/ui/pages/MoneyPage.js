@@ -13,7 +13,11 @@ import {
     convertStringToDateTime,
     MONEY_FILTER_TYPE_INCOME,
     MONEY_VIEW_TYPE_CATEGORY,
-    MONEY_FILTER_TYPE_FIXED_SPEND, MONEY_FILTER_TYPE_FREE_SPEND, MONEY_ADD_TYPE_PLUS, MONEY_ADD_TYPE_MINUS
+    MONEY_FILTER_TYPE_FIXED_SPEND,
+    MONEY_FILTER_TYPE_FREE_SPEND,
+    MONEY_ADD_TYPE_PLUS,
+    MONEY_ADD_TYPE_MINUS,
+    MONEY_MANAGER_TYPE_BANK_BOOK
 } from "../../Defines";
 import css from "./MoneyPage.module.css";
 import MoneyDayComponent from "../components/MoneyDayComponent";
@@ -22,6 +26,7 @@ import MoneyWeekComponent from "../components/MoneyWeekComponent";
 import MoneyMonthComponent from "../components/MoneyMonthComponent";
 import AddMoneyTask from "../components/AddMoneyTask";
 import MoneyDateComponent from "../components/MoneyDateComponent";
+import AddMoneyTaskComponent from "../components/AddMoneyTaskComponent";
 
 export const MoneyContext = React.createContext()
 
@@ -41,6 +46,7 @@ function MoneyPage(props) {
     const [filterList, setFilterList] = useState([true, true, true]);
     const [periodType, setPeriodType] = useState(PERIOD_TYPE_MONTH);
     const [moneyTaskListWithFilter, setMoneyTaskListWithFilter] = useState([]);
+    const [moneyManagerList, setMoneyManagerList] = useState([]);
 
     const store = {
         mainCategoryList, setMainCategoryList,
@@ -53,6 +59,7 @@ function MoneyPage(props) {
         endDate, setEndDate,
         periodType, setPeriodType,
         filterList, setFilterList,
+        moneyManagerList, setMoneyManagerList,
     }
 
     const uid = localStorage.getItem("uid");
@@ -120,6 +127,25 @@ function MoneyPage(props) {
         setMainCategoryList(data.mainCategoryList);
         setSubCategoryList(data.subCategoryList);
         setMoneyTaskList(data.moneyTaskList);
+
+        const mml = [
+            {
+                moneyManagerNo:1,
+                type:MONEY_MANAGER_TYPE_BANK_BOOK,
+                name:"국민은행",
+                money:10000,
+                detail:"99575803840"
+            },
+            {
+                moneyManagerNo:2,
+                type:MONEY_MANAGER_TYPE_BANK_BOOK,
+                name:"신한은행",
+                money:20000,
+                detail:"12938-74-1982"
+            },
+        ]
+
+        setMoneyManagerList(mml);
     }
 
     const loadMoneyTaskListErr = (response) => {
@@ -383,7 +409,7 @@ function MoneyPage(props) {
                     { addTaskBtn === 1 && <img src={moneyAddTaskBtnClickPath} width={64} height={64}  alt='추가'/> }
                 </button>
                 {
-                    isAddTask === true ? <div className={css.addDiv}><AddMoneyTask closeFunc={() => setIsAddTask(false)}/></div> : <div></div>
+                    isAddTask === true ? <AddMoneyTaskComponent closeFunc={() => setIsAddTask(false)}/> : <div></div>
                 }
             </div>
         </MoneyContext.Provider>

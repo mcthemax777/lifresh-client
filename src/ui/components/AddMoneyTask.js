@@ -5,7 +5,11 @@ import '../../Global.css';
 import {
     checkErrorResponse,
     convertDateTimeLocalToTime,
-    isNumeric, MONEY_ADD_TYPE_MINUS, MONEY_ADD_TYPE_PLUS, MONEY_MINUS_TYPE_FIXED, MONEY_MINUS_TYPE_FREE,
+    isNumeric,
+    MONEY_ADD_TYPE_MINUS,
+    MONEY_ADD_TYPE_PLUS,
+    MONEY_MINUS_TYPE_FIXED,
+    MONEY_MINUS_TYPE_FREE,
 } from "../../Defines";
 import css from './AddMoneyTask.module.css'
 import {MoneyContext} from "../pages/MoneyPage";
@@ -65,6 +69,7 @@ function AddMoneyTask(props) {
         const moneyValue = moneyRef.current.value;
         const dateTimeLocal = dateTimeRef.current.value;
         const detail = detailRef.current.value;
+        const moneyManagerType = moneyManagerTypeRef.current.value;
         let overMoney = 0;
         if(addMoneyType === MONEY_ADD_TYPE_MINUS && priority === MONEY_MINUS_TYPE_FREE) {
             const overMoneyValue = overMoneyRef.current.value;
@@ -76,6 +81,11 @@ function AddMoneyTask(props) {
             }
 
             overMoney = Number(overMoneyValue);
+        }
+
+        if(moneyManagerType === 0) {
+            alert("자산을 선택해주세요.");
+            return;
         }
 
         //분류가 되지 않은 경우
@@ -125,6 +135,7 @@ function AddMoneyTask(props) {
 
             const addMoneyTaskObj = {
                 moneyTaskNo: moneyTaskNo,
+                //moneyManagerType: moneyManagerType,
                 categoryType: addMoneyType,
                 mainCategoryNo: selectedMainCategoryNo,
                 subCategoryNo: selectedSubCategoryNo,
@@ -283,11 +294,21 @@ function AddMoneyTask(props) {
     const subCategorySelectRef = useRef();
     const dateTimeRef = useRef();
     const detailRef = useRef();
+    const moneyManagerTypeRef = useRef();
 
     return(
         <div className={css.addMoneyTaskDiv}>
             <h2>{title}</h2>
             <div className={css.addMoneyTaskContent}> 금액 : <input ref={moneyRef} type='text' className={css.addMoneyTaskContent1}/></div>
+            <div className={css.addMoneyTaskContent}> 자산 :
+                <select ref={moneyManagerTypeRef} className={css.addMoneyTaskContent1}>
+                    {
+                        store.moneyManagerList.map((moneyManager, index) => (
+                            <option key={index} value={moneyManager.moneyManagerNo}>{moneyManager.name}</option>
+                        ))
+                    }
+                </select>
+            </div>
             <div className={css.addMoneyTaskContent}> 타입 :
                 <select ref={pmSelectRef} className={css.addMoneyTaskContent1} onChange={(e) => setAddMoneyType(Number(e.target.value))}>
                     <option value={MONEY_ADD_TYPE_MINUS}>{minusMoney}</option>
