@@ -33,7 +33,8 @@ export const MONEY_MANAGER_TYPE_PREPAYMENT_CARD = 4;
 export const MONEY_MANAGER_TYPE_GIFT_CARD = 5;
 
 export const ADD_TYPE_MONEY_TASK = 0;
-export const ADD_TYPE_MONEY_MANAGER = 1;
+export const ADD_TYPE_MONEY_CATEGORY = 1;
+export const ADD_TYPE_MONEY_MANAGER = 2;
 
 export const checkIsToday = (today, startTime) => {
     return today.getFullYear() === startTime.getFullYear() &&

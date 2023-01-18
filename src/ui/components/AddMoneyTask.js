@@ -25,6 +25,7 @@ function AddMoneyTask(props) {
     const [title, setTitle] = useState('추가');
     const [moneyTaskNo, setMoneyTaskNo] = useState(0);
     const [addMoneyType, setAddMoneyType] = useState(MONEY_ADD_TYPE_MINUS);
+    const [moneyManagerNo, setMoneyManagerNo] = useState(0);
     const [priority, setPriority] = useState(MONEY_MINUS_TYPE_FIXED);
 
     const [selectedMainCategoryNo, setSelectedMainCategoryNo] = useState(0);
@@ -135,7 +136,7 @@ function AddMoneyTask(props) {
 
             const addMoneyTaskObj = {
                 moneyTaskNo: moneyTaskNo,
-                //moneyManagerType: moneyManagerType,
+                moneyManagerNo: moneyManagerNo,
                 categoryType: addMoneyType,
                 mainCategoryNo: selectedMainCategoryNo,
                 subCategoryNo: selectedSubCategoryNo,
@@ -301,7 +302,7 @@ function AddMoneyTask(props) {
             <h2>{title}</h2>
             <div className={css.addMoneyTaskContent}> 금액 : <input ref={moneyRef} type='text' className={css.addMoneyTaskContent1}/></div>
             <div className={css.addMoneyTaskContent}> 자산 :
-                <select ref={moneyManagerTypeRef} className={css.addMoneyTaskContent1}>
+                <select ref={moneyManagerTypeRef} className={css.addMoneyTaskContent1} onChange={(e) => setMoneyManagerNo(Number(e.target.value))}>
                     {
                         store.moneyManagerList.map((moneyManager, index) => (
                             <option key={index} value={moneyManager.moneyManagerNo}>{moneyManager.name}</option>

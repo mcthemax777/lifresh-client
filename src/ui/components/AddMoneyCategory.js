@@ -1,19 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import DayPlanContent from "./DayPlanContent";
-import {AppContext} from "../../App";
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
-import LoginButton from "./LoginButton";
 import '../../Global.css';
-import {checkErrorResponse, convertDateTimeLocalToTime, currentTime, isNumeric} from "../../Defines";
-import MoneyContent from "./MoneyContent";
+import {
+    checkErrorResponse,
+    convertDateTimeLocalToTime,
+    currentTime,
+    isNumeric,
+    MONEY_ADD_TYPE_MINUS, MONEY_ADD_TYPE_PLUS
+} from "../../Defines";
+import {MoneyContext} from "../pages/MoneyPage";
+import css from "./AddMoneyTask.module.css";
 
-var addTaskBtnPath = "img/add_task_btn.png";
 
 function AddMoneyCategory(props) {
-    //const store = React.useContext(AppContext)
+
+    const {store, loadMoneyTaskList} = useContext(MoneyContext);
     let navigate = useNavigate();
 
+    const [categoryType, setCategoryType] = useState(MONEY_ADD_TYPE_MINUS);
     const [selectedMainCategoryNo, setSelectedMainCategoryNo] = useState(0);
 
     const uid = localStorage.getItem("uid");
@@ -36,7 +41,7 @@ function AddMoneyCategory(props) {
         const mainCategoryObj = {
             mainCategoryNo: 0,
             name: addMainCategoryName,
-            categoryType: 2
+            categoryType: categoryType
         };
 
         SendData("addMainCategoryList",
@@ -65,8 +70,9 @@ function AddMoneyCategory(props) {
         //인풋 데이터 초기화
         reset();
 
+        props.closeFunc();
         //가계부 리로드
-        props.getMoneyTaskList();
+        loadMoneyTaskList();
     }
 
     const addMoneyMainCategoryListErr = (response) => {
@@ -91,7 +97,8 @@ function AddMoneyCategory(props) {
         const subCategoryObj = {
             mainCategoryNo: selectedMainCategoryNo,
             subCategoryNo: 0,
-            name: addSubCategoryName
+            name: addSubCategoryName,
+            categoryType: categoryType
         };
 
         SendData("addSubCategoryList",
@@ -120,8 +127,9 @@ function AddMoneyCategory(props) {
         //인풋 데이터 초기화
         reset();
 
+        props.closeFunc();
         //가계부 리로드
-        props.getMoneyTaskList();
+        loadMoneyTaskList();
     }
 
     const addMoneySubCategoryListErr = (response) => {
@@ -149,19 +157,27 @@ function AddMoneyCategory(props) {
         console.log("handleMainCategoryRadioSelect" + e.target.value);
     }
 
+    const minusCategoryTypeRef = useRef();
+    const plusCategoryTypeRef = useRef();
+
     return(
         <div className='addScheduleTask'>
             <h2>카테고리 관리</h2>
             <input type="radio" onClick={handleMainCategoryRadioSelect} name="chk_info" value="0" defaultChecked={true}/>대분류 추가
             <input type="radio" onClick={handleMainCategoryRadioSelect} name="chk_info" value="1"/>기존 대본류
+            <br/><br/>
+            <input type="radio" name="pmRadio" onClick={() => setCategoryType(MONEY_ADD_TYPE_MINUS)}  ref={minusCategoryTypeRef} value={MONEY_ADD_TYPE_MINUS} defaultChecked={true}/>지출
+            <input type="radio" name="pmRadio" onClick={() => setCategoryType(MONEY_ADD_TYPE_PLUS)} ref={plusCategoryTypeRef} value={MONEY_ADD_TYPE_PLUS} />수입
 
             <div hidden={selectedMainCategoryNo !== 0}>
                  <input id='addMainCategoryName' type='text' /> <button onClick={addMoneyMainCategory}>추가</button>
             </div>
             <div hidden={selectedMainCategoryNo === 0}>
+
                 <select onChange={handleMainCategorySelect} id="mainCategorySelect" hidden={selectedMainCategoryNo === 0}>
                 {
-                    props.mainCategoryList.map((mainCategory, index) => (
+                    store.mainCategoryList.map((mainCategory, index) => (
+                        Number(categoryType) === Number(mainCategory.categoryType) &&
                         <option key={index} value={mainCategory.mainCategoryNo}>{mainCategory.name}</option>
                     ))
                 }

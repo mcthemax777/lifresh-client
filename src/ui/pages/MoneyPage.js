@@ -36,6 +36,7 @@ function MoneyPage(props) {
     const [viewType, setViewType] = useState(MONEY_VIEW_TYPE_TIME);
     const [mainCategoryList, setMainCategoryList] = useState([]);
     const [subCategoryList, setSubCategoryList] = useState([]);
+    const [moneyManagerList, setMoneyManagerList] = useState([]);
     const [moneyTaskList, setMoneyTaskList] = useState([]);
     const [freeMinusMoney, setFreeMinusMoney] = useState(0);
     const [minusMoney, setMinusMoney] = useState(0);
@@ -46,11 +47,11 @@ function MoneyPage(props) {
     const [filterList, setFilterList] = useState([true, true, true]);
     const [periodType, setPeriodType] = useState(PERIOD_TYPE_MONTH);
     const [moneyTaskListWithFilter, setMoneyTaskListWithFilter] = useState([]);
-    const [moneyManagerList, setMoneyManagerList] = useState([]);
 
     const store = {
         mainCategoryList, setMainCategoryList,
         subCategoryList, setSubCategoryList,
+        moneyManagerList, setMoneyManagerList,
         moneyTaskList, setMoneyTaskList,
         minusMoney, setMinusMoney,
         plusMoney, setPlusMoney,
@@ -59,7 +60,6 @@ function MoneyPage(props) {
         endDate, setEndDate,
         periodType, setPeriodType,
         filterList, setFilterList,
-        moneyManagerList, setMoneyManagerList,
     }
 
     const uid = localStorage.getItem("uid");
@@ -127,25 +127,7 @@ function MoneyPage(props) {
         setMainCategoryList(data.mainCategoryList);
         setSubCategoryList(data.subCategoryList);
         setMoneyTaskList(data.moneyTaskList);
-
-        const mml = [
-            {
-                moneyManagerNo:1,
-                type:MONEY_MANAGER_TYPE_BANK_BOOK,
-                name:"국민은행",
-                money:10000,
-                detail:"99575803840"
-            },
-            {
-                moneyManagerNo:2,
-                type:MONEY_MANAGER_TYPE_BANK_BOOK,
-                name:"신한은행",
-                money:20000,
-                detail:"12938-74-1982"
-            },
-        ]
-
-        setMoneyManagerList(mml);
+        setMoneyManagerList(data.moneyManagerList);
     }
 
     const loadMoneyTaskListErr = (response) => {
