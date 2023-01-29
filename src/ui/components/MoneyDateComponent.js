@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import css from "./MoneyDateComponent.module.css";
 import {
     PERIOD_TYPE_CUSTOM,
@@ -64,7 +64,6 @@ function DateComponent(props) {
 
 
         if(store.periodType === PERIOD_TYPE_CUSTOM) {
-            console.log("cs");
             customDateDiv.current.style.display = "flex";
             setCustom();
         } else {
@@ -165,6 +164,17 @@ function DateComponent(props) {
         periodSelect.current.options[store.periodType].selected = true;
     }, []);
 
+    const filterBtnPath = "img/filter_btn.png";
+
+    const clickAddTaskBtn = () => {
+        if(isFilterOn)
+            setIsFilterOn(false);
+        else
+            setIsFilterOn(true);
+    }
+
+    const [isFilterOn, setIsFilterOn] = useState(true);
+
     return(
         <div id="componentDiv" className={css.componentDiv}>
             <div id="dateDiv" className={css.dateDiv}>
@@ -180,8 +190,7 @@ function DateComponent(props) {
                     <input type="button" className={css.dateNext} onClick={() => clickChangeCustomDateBtn(1)} value=">"/>
                 </div>
             </div>
-            {/*<div className={css.periodMenu}>*/}
-                {/*<label htmlFor="periodMenu"></label>*/}
+            <div className={css.rightDiv}>
                 <select ref={periodSelect} className={css.periodSelect} onChange={clickPeriodBtn} >
                     <option id="dayScheduleBtn" value={PERIOD_TYPE_DAY}>일일</option>
                     <option id="weekScheduleBtn" value={PERIOD_TYPE_WEEK}>주간</option>
@@ -189,7 +198,10 @@ function DateComponent(props) {
                     <option id="yearScheduleBtn" value={PERIOD_TYPE_YEAR}>연간</option>
                     <option id="customDateBtn" value={PERIOD_TYPE_CUSTOM}>기간설정</option>
                 </select>
-            {/*</div>*/}
+                <button onClick={clickAddTaskBtn} className={css.periodSelect}>
+                    { isFilterOn ? <img src={filterBtnPath} width={32} height={32}  alt=""/> : <img src={filterBtnPath} width={32} height={32} alt=""/>}
+                </button>
+            </div>
         </div>
     )
 }

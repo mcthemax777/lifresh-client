@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 
 export const PAGE_TYPE_SCHEDULE = 0;
-export const PAGE_TYPE_DO_TO = 1;
+export const PAGE_TYPE_TO_DO = 1;
 export const PAGE_TYPE_MONEY = 2;
 export const PAGE_TYPE_SETTING = 3;
 
@@ -11,8 +11,13 @@ export const PERIOD_TYPE_MONTH = 2;
 export const PERIOD_TYPE_YEAR = 3;
 export const PERIOD_TYPE_CUSTOM = 4;
 
+export const MONEY_MENU_TYPE_USE = 0;
+export const MONEY_MENU_TYPE_CATEGORY = 1;
+export const MONEY_MENU_TYPE_MANAGER = 2;
+
 export const MONEY_VIEW_TYPE_TIME = 0;
 export const MONEY_VIEW_TYPE_CATEGORY = 1;
+export const MONEY_VIEW_TYPE_MONEY_MANAGER = 2;
 
 export const MONEY_FILTER_TYPE_INCOME = 0;
 export const MONEY_FILTER_TYPE_FIXED_SPEND = 1;
@@ -31,6 +36,10 @@ export const MONEY_MANAGER_TYPE_CREDIT_CARD = 2;
 export const MONEY_MANAGER_TYPE_CHECK_CARD = 3;
 export const MONEY_MANAGER_TYPE_PREPAYMENT_CARD = 4;
 export const MONEY_MANAGER_TYPE_GIFT_CARD = 5;
+
+export const MONEY_MANAGER_TYPE_COUNT = 6;
+
+
 
 export const ADD_TYPE_MONEY_TASK = 0;
 export const ADD_TYPE_MONEY_CATEGORY = 1;

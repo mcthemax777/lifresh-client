@@ -84,7 +84,7 @@ function AddMoneyTask(props) {
             overMoney = Number(overMoneyValue);
         }
 
-        if(moneyManagerType === 0) {
+        if(moneyManagerType === "0") {
             alert("자산을 선택해주세요.");
             return;
         }
@@ -128,7 +128,6 @@ function AddMoneyTask(props) {
         }
 
         const dateTime = convertDateTimeLocalToTime(dateTimeLocal);
-
 
         // eslint-disable-next-line no-restricted-globals
         var addConfirm = confirm(" 데이터를 추가하시겠습니까?");
@@ -300,9 +299,10 @@ function AddMoneyTask(props) {
     return(
         <div className={css.addMoneyTaskDiv}>
             <h2>{title}</h2>
-            <div className={css.addMoneyTaskContent}> 금액 : <input ref={moneyRef} type='text' className={css.addMoneyTaskContent1}/></div>
+            <div className={css.addMoneyTaskContent}> 금액 : <input ref={moneyRef} type='number' min="1" className={css.addMoneyTaskContent1}/></div>
             <div className={css.addMoneyTaskContent}> 자산 :
                 <select ref={moneyManagerTypeRef} className={css.addMoneyTaskContent1} onChange={(e) => setMoneyManagerNo(Number(e.target.value))}>
+                    <option value='0'>=== 선택 ===</option>
                     {
                         store.moneyManagerList.map((moneyManager, index) => (
                             <option key={index} value={moneyManager.moneyManagerNo}>{moneyManager.name}</option>

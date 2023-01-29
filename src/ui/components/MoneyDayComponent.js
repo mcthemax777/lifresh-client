@@ -93,10 +93,19 @@ function MoneyDayComponent(props) {
 
     useEffect(() => {
         setData();
-    },[props.today, props.moneyTaskList]);
+    },[props.today, store.filterList, props.moneyTaskList]);
+
+    const graphDefaultPath = "img/graph_default.png";
 
     return (
-        <div className="defaultReactDiv">
+        <div className={css.dayMoney}>
+            <div className={css.dayMoneyStatistics}>
+                <img src={graphDefaultPath} width={128} height={128}  alt='추가'/>
+                <div>수입 : {store.plusMoney} </div>
+                <div>지출 : {store.minusMoney} </div>
+                <div>({store.minusMoney - store.freeMinusMoney} + {store.freeMinusMoney}) </div>
+                <div>합계 : {store.plusMoney - store.minusMoney} </div>
+            </div>
             <div ref={dayMoneyTimeScroll} className={css.dayMoneyTimeScroll}>
                 <div ref={dayMoneyTask} className={css.dayMoneyTask}>
                     {

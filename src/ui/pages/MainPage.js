@@ -10,7 +10,7 @@ import SettingPage from "./SettingPage";
 import DateComponent from "../components/DateComponent";
 
 import {
-    PAGE_TYPE_DO_TO,
+    PAGE_TYPE_TO_DO,
     PAGE_TYPE_MONEY,
     PAGE_TYPE_SCHEDULE,
     PAGE_TYPE_SETTING,
@@ -63,7 +63,7 @@ function MainPage() {
         let windowWidth = windowDimensions.width;
         let windowHeight = windowDimensions.height;
 
-        if(windowWidth >= 1700) {
+        if(windowWidth >= 1000) {
             setIsSchedulePageDisplay(true);
             setIsToDoPageDisplay(true);
             setIsMoneyPageDisplay(true);
@@ -95,39 +95,44 @@ function MainPage() {
         setPeriodType(Number(e.target.value));
     }
 
-    const changeDisplay = () => {
+    const changePage = (changePageType) => {
 
         console.log("ff");
         if(isSchedulePageDisplay && isToDoPageDisplay && isMoneyPageDisplay) {
 
         } else {
-            if(isSchedulePageDisplay) {
+            if(changePageType === PAGE_TYPE_SCHEDULE) {
+                setIsToDoPageDisplay(false);
+                setIsMoneyPageDisplay(false);
+                setIsSchedulePageDisplay(true);
+            }
+            if(changePageType === PAGE_TYPE_TO_DO) {
                 setIsToDoPageDisplay(true);
+                setIsMoneyPageDisplay(false);
                 setIsSchedulePageDisplay(false);
             }
-
-            if(isToDoPageDisplay) {
-                setIsMoneyPageDisplay(true);
+            if(changePageType === PAGE_TYPE_MONEY) {
                 setIsToDoPageDisplay(false);
-            }
-
-            if(isMoneyPageDisplay) {
-                setIsSchedulePageDisplay(true);
-                setIsMoneyPageDisplay(false);
+                setIsMoneyPageDisplay(true);
+                setIsSchedulePageDisplay(false);
             }
         }
 
+        setPageType(changePageType);
     }
+    const [isOpenMenu, setIsOpenMenu] = useState(false)
 
     return(
         <div className="defaultReactDiv">
             {/*<button onClick={changeDisplay} className={css.menuDiv} value="MENU">MENU</button>*/}
-            {/*<MenuComponent clickCategoryBtn={clickCategoryBtn}></MenuComponent>*/}
-            {/*<DateComponent isMoneyPageDisplay={isMoneyPageDisplay} isToDoPageDisplay={isToDoPageDisplay} isSchedulePageDisplay={isSchedulePageDisplay} setIsMoneyPageDisplay={setIsMoneyPageDisplay} setIsToDoPageDisplay={setIsToDoPageDisplay} setIsSchedulePageDisplay={setIsSchedulePageDisplay} today={today} periodType={periodType} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>*/}
+            {
+                isOpenMenu ? <MenuComponent changePage={changePage} setIsOpenMenu={setIsOpenMenu}></MenuComponent> : <div/>
+            }
+            <DateComponent setIsOpenMenu={setIsOpenMenu} clickChangeCurrentDateBtn={clickChangeCurrentDateBtn} clickPeriodBtn={clickPeriodBtn}></DateComponent>
             <div className={css.plannerContent}>
                 <SchedulePage isSchedulePageDisplay={isSchedulePageDisplay} today={today} periodType={periodType}></SchedulePage>
                 <ToDoPage isToDoPageDisplay={isToDoPageDisplay} today={today} periodType={periodType}></ToDoPage>
-                <MoneyPage isMoneyPageDisplay={isMoneyPageDisplay} today={today} periodType={periodType}></MoneyPage>
+                <MoneyPage isMoneyPageDisplay={isMoneyPageDisplay} today={today} periodType={periodType} ></MoneyPage>
                 {/*{ pageType === PAGE_TYPE_SETTING && <SettingPage></SettingPage> }*/}
             </div>
         </div>

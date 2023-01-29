@@ -17,22 +17,27 @@ import {
     MONEY_FILTER_TYPE_FREE_SPEND,
     MONEY_ADD_TYPE_PLUS,
     MONEY_ADD_TYPE_MINUS,
-    MONEY_MANAGER_TYPE_BANK_BOOK
+    MONEY_MANAGER_TYPE_BANK_BOOK,
+    MONEY_MENU_TYPE_USE,
+    MONEY_MENU_TYPE_MANAGER,
+    MONEY_VIEW_TYPE_MONEY_MANAGER,
+    MONEY_MENU_TYPE_CATEGORY
 } from "../../Defines";
 import css from "./MoneyPage.module.css";
 import MoneyDayComponent from "../components/MoneyDayComponent";
 import MoneyYearComponent from "../components/MoneyYearComponent";
 import MoneyWeekComponent from "../components/MoneyWeekComponent";
 import MoneyMonthComponent from "../components/MoneyMonthComponent";
-import AddMoneyTask from "../components/AddMoneyTask";
 import MoneyDateComponent from "../components/MoneyDateComponent";
 import AddMoneyTaskComponent from "../components/AddMoneyTaskComponent";
+import MoneyManagerComponent from "../components/MoneyManagerComponent";
 
 export const MoneyContext = React.createContext()
 
 function MoneyPage(props) {
     let navigate = useNavigate();
 
+    const [moneyMenuType, setMoneyMenuType] = useState(MONEY_MENU_TYPE_USE);
     const [viewType, setViewType] = useState(MONEY_VIEW_TYPE_TIME);
     const [mainCategoryList, setMainCategoryList] = useState([]);
     const [subCategoryList, setSubCategoryList] = useState([]);
@@ -55,6 +60,7 @@ function MoneyPage(props) {
         moneyTaskList, setMoneyTaskList,
         minusMoney, setMinusMoney,
         plusMoney, setPlusMoney,
+        freeMinusMoney, setFreeMinusMoney,
         isAddTask, setIsAddTask,
         startDate, setStartDate,
         endDate, setEndDate,
@@ -161,29 +167,43 @@ function MoneyPage(props) {
 
             const moneyTask = moneyTaskList[i];
             //기간 확인
-            if(isBetweenPeriod(convertStringToDateTime(moneyTask.startTime))) {
+            if (isBetweenPeriod(convertStringToDateTime(moneyTask.startTime))) {
 
                 let passFilter = true;
 
                 //필터 확인
-                if(filterList[MONEY_FILTER_TYPE_INCOME] === false && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) {
+                if (filterList[MONEY_FILTER_TYPE_INCOME] === false && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) {
                     passFilter = false;
-                } else if(filterList[MONEY_FILTER_TYPE_FIXED_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney === 0)) {
+                } else if (filterList[MONEY_FILTER_TYPE_FIXED_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney === 0)) {
                     passFilter = false;
-                } else if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] === false && (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney === moneyTask.money)) {
-                    passFilter = false;
+                } else if (filterList[MONEY_FILTER_TYPE_FREE_SPEND] === false) {
+                    if (filterList[MONEY_FILTER_TYPE_FIXED_SPEND]) {
+                        if (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS && moneyTask.overMoney === moneyTask.money) {
+                            passFilter = false;
+                        }
+                    } else {
+                        if (moneyTask.categoryType === MONEY_ADD_TYPE_MINUS) {
+                            passFilter = false;
+                        }
+                    }
                 }
 
-                if(passFilter) newMoneyTaskListWithFilter.push(moneyTask);
+                if (passFilter) {
+                    newMoneyTaskListWithFilter.push(moneyTask);
 
-                if(filterList[MONEY_FILTER_TYPE_INCOME] && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
-                else if(filterList[MONEY_FILTER_TYPE_FREE_SPEND] && moneyTask.overMoney > 0) {
-                    newFreeMinusMoney += moneyTask.overMoney;
-                } else if(filterList[MONEY_FILTER_TYPE_FIXED_SPEND] && moneyTask.categoryType === MONEY_ADD_TYPE_MINUS) {
-                    newMinusMoney += (moneyTask.money - moneyTask.overMoney);
+                    if (filterList[MONEY_FILTER_TYPE_INCOME] && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
+                    else if(moneyTask.categoryType === MONEY_ADD_TYPE_MINUS) {
+                        if (filterList[MONEY_FILTER_TYPE_FIXED_SPEND]) {
+                            newMinusMoney += (moneyTask.money - moneyTask.overMoney);
+                        }
+                        if (filterList[MONEY_FILTER_TYPE_FREE_SPEND] && moneyTask.overMoney > 0) {
+                            newFreeMinusMoney += moneyTask.overMoney;
+                        }
+                    }
                 }
             }
         }
+
 
         setMoneyTaskListWithFilter(newMoneyTaskListWithFilter);
         setPlusMoney(newPlusMoney);
@@ -258,14 +278,14 @@ function MoneyPage(props) {
 
         setViewType(newViewType);
 
-        if(newViewType === MONEY_VIEW_TYPE_CATEGORY) {
-            if(filterList[MONEY_FILTER_TYPE_INCOME] && (filterList[MONEY_FILTER_TYPE_FIXED_SPEND] || filterList[MONEY_FILTER_TYPE_FREE_SPEND])) {
-                let copyFilterList = [...filterList];
-                copyFilterList[MONEY_FILTER_TYPE_INCOME] = false;
-
-                setFilterList(copyFilterList);
-            }
-        }
+        // if(newViewType === MONEY_VIEW_TYPE_CATEGORY) {
+        //     if(filterList[MONEY_FILTER_TYPE_INCOME] && (filterList[MONEY_FILTER_TYPE_FIXED_SPEND] || filterList[MONEY_FILTER_TYPE_FREE_SPEND])) {
+        //         let copyFilterList = [...filterList];
+        //         copyFilterList[MONEY_FILTER_TYPE_INCOME] = false;
+        //
+        //         setFilterList(copyFilterList);
+        //     }
+        // }
     }
 
     const clickFilter = (filterType) => {
@@ -286,11 +306,26 @@ function MoneyPage(props) {
         setFilterList(copyFilterList);
     }
 
-    const viewRefList = [useRef(), useRef()];
+    const viewRefList = [useRef(), useRef(), useRef()];
+    const menuRefList = [useRef(), useRef(), useRef()];
 
     useEffect(() => {
 
-        console.log(viewRefList);
+        for( let i = 0 ; i < menuRefList.length ; i++) {
+            if(i === moneyMenuType) {
+                // filterRefList[i].current.style.backgroundColor = "#80ff80";
+                // filterRefList[i].current.style.color = "white";
+                menuRefList[i].current.style.color = "#2f2f2f";
+            } else {
+                // filterRefList[i].current.style.backgroundColor = "white";
+                // filterRefList[i].current.style.color = "#8f8f8f";
+                menuRefList[i].current.style.color = "#d0d0d0";
+            }
+        }
+
+    }, [moneyMenuType]);
+
+    useEffect(() => {
 
         for( let i = 0 ; i < viewRefList.length ; i++) {
             if(i === viewType) {
@@ -309,22 +344,21 @@ function MoneyPage(props) {
 
     const filterRefList = [useRef(), useRef(), useRef()];
 
-    useEffect(() => {
-
-        console.log(filterList);
-        for( let i = 0 ; i < filterRefList.length ; i++) {
-            if(filterList[i]) {
-                filterRefList[i].current.style.backgroundColor = "#80ff80";
-                filterRefList[i].current.style.color = "white";
-                filterRefList[i].current.style.border = "1px solid white";
-            } else {
-                filterRefList[i].current.style.backgroundColor = "white";
-                filterRefList[i].current.style.color = "#8f8f8f";
-                filterRefList[i].current.style.border = "1px solid #d0d0d0";
-            }
-        }
-
-    }, [filterList]);
+    // useEffect(() => {
+    //
+    //     for( let i = 0 ; i < filterRefList.length ; i++) {
+    //         if(filterList[i]) {
+    //             filterRefList[i].current.style.backgroundColor = "#80ff80";
+    //             filterRefList[i].current.style.color = "white";
+    //             filterRefList[i].current.style.border = "1px solid white";
+    //         } else {
+    //             filterRefList[i].current.style.backgroundColor = "white";
+    //             filterRefList[i].current.style.color = "#8f8f8f";
+    //             filterRefList[i].current.style.border = "1px solid #d0d0d0";
+    //         }
+    //     }
+    //
+    // }, [filterList]);
 
     let closeDetail = undefined;
     let moneyTaskNo = 0;
@@ -354,38 +388,57 @@ function MoneyPage(props) {
     return(
         <MoneyContext.Provider value={{store, loadMoneyTaskList, getMainCategoryNameByNo, getSubCategoryNameByNo, setActiveDetail}}>
             <div ref={moneyPageDiv} className={css.moneyPageDiv}>
-                <MoneyDateComponent />
-                <div id="viewTypeDiv" className={css.viewTypeDiv}>
-                    <div ref={viewRefList[MONEY_VIEW_TYPE_TIME]} className={css.viewTypeTextDiv} onClick={ () => clickView(MONEY_VIEW_TYPE_TIME)}>날짜별</div>
-                    <div ref={viewRefList[MONEY_VIEW_TYPE_CATEGORY]} className={css.viewTypeTextDiv} onClick={ () => clickView(MONEY_VIEW_TYPE_CATEGORY)}>카테고리별</div>
+                <div id="menuTypeDiv" className={css.menuTypeDiv}>
+                    <div ref={menuRefList[MONEY_MENU_TYPE_USE]} className={css.menuTypeTextDiv} onClick={ () => setMoneyMenuType(MONEY_MENU_TYPE_USE)}>가계부</div>
+                    <div ref={menuRefList[MONEY_MENU_TYPE_MANAGER]} className={css.menuTypeTextDiv} onClick={ () => setMoneyMenuType(MONEY_MENU_TYPE_MANAGER)}>자산 관리</div>
+                    <div ref={menuRefList[MONEY_MENU_TYPE_CATEGORY]} className={css.menuTypeTextDiv} onClick={ () => setMoneyMenuType(MONEY_MENU_TYPE_CATEGORY)}>카테고리 관리</div>
                 </div>
-                <div className={css.filterTypeDiv}>
-                    <div className={css.filterTypeContentDiv}>
-                        <div ref={filterRefList[MONEY_FILTER_TYPE_INCOME]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_INCOME)}>수입</div>
-                        <div className={css.filterTypePlusTextDiv}>{plusMoney}원</div>
-                    </div>
-                    <div className={css.filterTypeContentDiv}>
-                        <div ref={filterRefList[MONEY_FILTER_TYPE_FIXED_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FIXED_SPEND)}>필수지출</div>
-                        <div className={css.filterTypeMinusTextDiv}>{minusMoney}원</div>
-                    </div>
-                    <div className={css.filterTypeContentDiv}>
-                        <div ref={filterRefList[MONEY_FILTER_TYPE_FREE_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FREE_SPEND)}>비필수지출</div>
-                        <div className={css.filterTypeFreeMinusTextDiv}>{freeMinusMoney}원</div>
-                    </div>
-                </div>
+                {
+                    moneyMenuType === MONEY_MENU_TYPE_USE ?
+                        <div className={css.MenuContentDiv}>
+                            <MoneyDateComponent />
+                            <div id="viewTypeDiv" className={css.viewTypeDiv}>
+                                <div ref={viewRefList[MONEY_VIEW_TYPE_TIME]} className={css.viewTypeTextDiv} onClick={ () => clickView(MONEY_VIEW_TYPE_TIME)}>날짜별</div>
+                                <div ref={viewRefList[MONEY_VIEW_TYPE_CATEGORY]} className={css.viewTypeTextDiv} onClick={ () => clickView(MONEY_VIEW_TYPE_CATEGORY)}>카테고리별</div>
+                                <div ref={viewRefList[MONEY_VIEW_TYPE_MONEY_MANAGER]} className={css.viewTypeTextDiv} onClick={ () => clickView(MONEY_VIEW_TYPE_MONEY_MANAGER)}>자산별</div>
+                            </div>
+                            {
+                                1 === 0 ?
+                                <div className={css.filterTypeDiv}>
+                                    <div className={css.filterTypeContentDiv}>
+                                        <div ref={filterRefList[MONEY_FILTER_TYPE_INCOME]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_INCOME)}>수입</div>
+                                        <div className={css.filterTypePlusTextDiv}>{plusMoney}원</div>
+                                    </div>
+                                    <div className={css.filterTypeContentDiv}>
+                                        <div ref={filterRefList[MONEY_FILTER_TYPE_FIXED_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FIXED_SPEND)}>필수지출</div>
+                                        <div className={css.filterTypeMinusTextDiv}>{minusMoney}원</div>
+                                    </div>
+                                    <div className={css.filterTypeContentDiv}>
+                                        <div ref={filterRefList[MONEY_FILTER_TYPE_FREE_SPEND]} className={css.filterTypeBtnDiv} onClick={ () => clickFilter(MONEY_FILTER_TYPE_FREE_SPEND)}>비필수지출</div>
+                                        <div className={css.filterTypeFreeMinusTextDiv}>{freeMinusMoney}원</div>
+                                    </div>
+                                </div> : <div></div>
+                            }
 
 
-                {/*<div id="moneySumDiv" className={css.moneySumDiv}>*/}
-                {/*    <div id="plusMoneyDiv" className={css.plusMoneyDiv}>{plusMoney}원</div>*/}
-                {/*    <div id="minusMoneyDiv" className={css.minusMoneyDiv}>{minusMoney}원</div>*/}
-                {/*    <div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
-                {/*</div>*/}
-                <div ref={moneyComponentDiv} className={css.moneyComponentDiv}>
-                    {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} today={props.today} moneyTaskList={moneyTaskListWithFilter}/> }
-                    {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
-                    {props.periodType === PERIOD_TYPE_MONTH && <MoneyMonthComponent className={css.daySchedule} today={props.today}/> }
-                    {props.periodType === PERIOD_TYPE_YEAR && <MoneyYearComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
-                </div>
+
+                            {/*<div id="moneySumDiv" className={css.moneySumDiv}>*/}
+                            {/*    <div id="plusMoneyDiv" className={css.plusMoneyDiv}>{plusMoney}원</div>*/}
+                            {/*    <div id="minusMoneyDiv" className={css.minusMoneyDiv}>{minusMoney}원</div>*/}
+                            {/*    <div id="totalMoneyDiv" className={css.totalMoneyDiv}></div>*/}
+                            {/*</div>*/}
+                            <div ref={moneyComponentDiv} className={css.moneyComponentDiv}>
+                                {props.periodType === PERIOD_TYPE_DAY && <MoneyDayComponent className={css.daySchedule} today={props.today} moneyTaskList={moneyTaskListWithFilter}/> }
+                                {props.periodType === PERIOD_TYPE_WEEK && <MoneyWeekComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
+                                {props.periodType === PERIOD_TYPE_MONTH && <MoneyMonthComponent className={css.daySchedule} today={props.today}/> }
+                                {props.periodType === PERIOD_TYPE_YEAR && <MoneyYearComponent className={css.daySchedule} moneyTaskLisk={moneyTaskList} today={props.today}/> }
+                            </div>
+
+                        </div> :
+                        <div>
+                            <MoneyManagerComponent className={css.daySchedule} today={props.today} moneyTaskList={moneyTaskListWithFilter}/>
+                        </div>
+                }
                 <button onClick={clickAddTaskBtn} className="addTaskBtn" onMouseDown={() => {setAddTaskBtn(1); clickAddTaskBtn();}} onMouseUp={() => setAddTaskBtn(0)} onMouseLeave={() => setAddTaskBtn(0)} >
                     { addTaskBtn === 0 && <img src={moneyAddTaskBtnPath} width={64} height={64}  alt='추가'/> }
                     { addTaskBtn === 1 && <img src={moneyAddTaskBtnClickPath} width={64} height={64}  alt='추가'/> }
@@ -393,6 +446,7 @@ function MoneyPage(props) {
                 {
                     isAddTask === true ? <AddMoneyTaskComponent closeFunc={() => setIsAddTask(false)}/> : <div></div>
                 }
+
             </div>
         </MoneyContext.Provider>
     )

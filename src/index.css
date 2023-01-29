@@ -29,9 +29,20 @@ body {
   src: url(./assets/fonts/malgunbd.ttf);
 }
 
+
 @font-face {
   font-family: "malgun";
   src: url(./assets/fonts/malgun.ttf);
+}
+
+@font-face {
+  font-family: "Kingham";
+  src: url(./assets/fonts/Kingham.ttf);
+}
+
+@font-face {
+  font-family: "Sparkle";
+  src: url(./assets/fonts/Sparkle.ttf);
 }
 
 .addTaskBtn {

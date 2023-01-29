@@ -80,8 +80,9 @@ function AddMoneyManager(props) {
         const moneyValue = moneyRef.current.value;
         const name = nameRef.current.value;
         const detail = detailRef.current.value;
-        let payDate = new Date();
-        let calcDate = new Date();
+
+        let payDate = 0;
+        let calcDate = 0;
 
         // if(moneyManagerType === MONEY_MANAGER_TYPE_CREDIT_CARD || moneyManagerType === MONEY_MANAGER_TYPE_CHECK_CARD) {
         //     const overMoneyValue = overMoneyRef.current.value;
@@ -102,9 +103,20 @@ function AddMoneyManager(props) {
             return;
         }
 
+        //카드일 경우 은행과 연결되어야 됨
+        if(moneyManagerType === MONEY_MANAGER_TYPE_CREDIT_CARD || moneyManagerType === MONEY_MANAGER_TYPE_CHECK_CARD) {
+            if(linkedMoneyManagerNo === 0) {
+                alert("연결 은행을 입력하세요.");
+                return;
+            }
+
+            if(moneyManagerType === MONEY_MANAGER_TYPE_CREDIT_CARD) {
+                payDate = Number(payDateRef.current.value);
+                calcDate = Number(calcDateRef.current.value);
+            }
+        }
+
         let money = Number(moneyValue);
-
-
 
         // eslint-disable-next-line no-restricted-globals
         var addConfirm = confirm(" 데이터를 추가하시겠습니까?");
@@ -113,8 +125,8 @@ function AddMoneyManager(props) {
             const addMoneyManagerObj = {
                 moneyManagerNo: 0,
                 moneyManagerType: moneyManagerType,
-                calcDate: 1,
-                payDate: 25,
+                calcDate: calcDate,
+                payDate: payDate,
                 money: money,
                 name: name,
                 detail: detail,
@@ -167,6 +179,7 @@ function AddMoneyManager(props) {
                 BANK_TYPE_LIST.includes(moneyManagerType) ?
                     <div className={css.addMoneyTaskContent}> 은행 :
                         <select ref={cardBankBookRef} className={css.addMoneyTaskContent1} onChange={(e) => setLinkedMoneyManagerNo(Number(e.target.value))}>
+                            <option value="0">==선택==</option>
                             {
                                 store.moneyManagerList.map((moneyManager, index) => (
                                     Number(MONEY_MANAGER_TYPE_BANK_BOOK) === Number(moneyManager.moneyManagerType) &&
@@ -181,9 +194,71 @@ function AddMoneyManager(props) {
 
             {
                 moneyManagerType === MONEY_MANAGER_TYPE_CREDIT_CARD ?
-                    <div className={css.addMoneyTaskContent}>  :
-                        <div className={css.addMoneyTaskContent}> 정산일 :  <input ref={calcDateRef} type='number' className={css.addMoneyTaskContent1}/></div>
-                        <div className={css.addMoneyTaskContent}> 결제일 :  <input ref={payDateRef} type='number' className={css.addMoneyTaskContent1}/></div>
+                    <div className={css.addMoneyTaskContent}>
+                        <div className={css.addMoneyTaskContent}> 정산일 :
+                            <select ref={calcDateRef} className={css.addMoneyTaskContent1}>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">말일</option>
+                            </select>
+                        </div>
+                        <div className={css.addMoneyTaskContent}> 결제일 :
+                            <select ref={payDateRef} className={css.addMoneyTaskContent1}>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">말일</option>
+                            </select>
+                        </div>
                     </div>
                     :
                     <div/>

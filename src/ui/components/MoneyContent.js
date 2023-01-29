@@ -15,7 +15,6 @@ function MoneyContent(props) {
     const [isClicked, setIsClicked] = useState(false);
 
     const onClick = () => {
-        console.log(this);
         if(isClicked) {
             setActiveDetail(props.moneyTask.moneyTaskNo, undefined);
             setIsClicked(false);
@@ -27,7 +26,6 @@ function MoneyContent(props) {
     }
 
     useEffect(() => {
-        console.log("useEffect[]")
 
         const test = props.moneyTask.moneyTaskNo % 6;
 
@@ -88,14 +86,12 @@ function MoneyContent(props) {
     }, []);
 
     useEffect(() => {
-        console.log("useEffect[filterList]")
 
 
         initText();
     }, [store.filterList, props.moneyTask]);
 
     const initText = () => {
-        console.log(props.moneyTask);
 
         let newMoneyText = "";
         let newOverMoneyText = "";
