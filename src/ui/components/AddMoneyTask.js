@@ -62,10 +62,6 @@ function AddMoneyTask(props) {
 
     }, []);
 
-    const closeAddMoneyTask = () => {
-        props.closeFunc();
-    }
-
     const addMoneyTask = (response) => {
         const moneyValue = moneyRef.current.value;
         const dateTimeLocal = dateTimeRef.current.value;
@@ -181,7 +177,6 @@ function AddMoneyTask(props) {
 
         //인풋 데이터 초기화
         reset();
-        props.closeFunc();
 
         //데이터 추가(TODO. 서버에서 데이터 내려주면 주석 풀기)
         // let copyMoneyTaskList = [...store.moneyTaskList];
@@ -205,8 +200,7 @@ function AddMoneyTask(props) {
         loadMoneyTaskList();
 
         //닫기
-        closeAddMoneyTask();
-
+        props.closeFunc();
     }
 
     const addMoneyTaskListErr = (response) => {
@@ -356,8 +350,6 @@ function AddMoneyTask(props) {
             <div className={css.addMoneyTaskContent}> 사용날짜 : <input ref={dateTimeRef} type='datetime-local' className={css.addMoneyTaskContent1}/></div>
             <div className={css.addMoneyTaskContent}> 설명 : <input ref={detailRef} type='text' className={css.addMoneyTaskContent1}/></div>
             <button  className={css.addMoneyTaskContent} onClick={addMoneyTask}>등록</button>
-            <button  className={css.addMoneyTaskContent} onClick={closeAddMoneyTask}>취소</button>
-
             <br/>
             <br/>
         </div>

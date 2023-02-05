@@ -23,7 +23,7 @@
     display: inline-block;
     float: left;
     width: 100%;
-    flex-basis: calc(100% - 322px);
+    flex-basis: calc(100% - 353px);
     overflow-y:scroll;
     border-radius: 2px;
 }

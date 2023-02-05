@@ -51,10 +51,6 @@ function AddMoneyManager(props) {
         props.closeFunc();
 
         loadMoneyTaskList();
-
-        //닫기
-        closeAddMoneyManager();
-
     }
 
     const addMoneyManagerListErr = (response) => {
@@ -148,10 +144,6 @@ function AddMoneyManager(props) {
                 addMoneyManagerListErr
             );
         }
-    }
-
-    const closeAddMoneyManager = () => {
-        props.closeFunc();
     }
 
     const BANK_TYPE_LIST = [MONEY_MANAGER_TYPE_CREDIT_CARD, MONEY_MANAGER_TYPE_CHECK_CARD];
@@ -265,7 +257,6 @@ function AddMoneyManager(props) {
             }
 
             <button  className={css.addMoneyTaskContent} onClick={addMoneyManager}>등록</button>
-            <button  className={css.addMoneyTaskContent} onClick={closeAddMoneyManager}>취소</button>
 
             <br/>
             <br/>

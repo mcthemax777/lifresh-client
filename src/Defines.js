@@ -1,5 +1,8 @@
 import {useNavigate} from "react-router-dom";
 
+export const POP_UP_TYPE_NONE = 0;
+export const POP_UP_TYPE_MONEY_ADD = 1;
+
 export const PAGE_TYPE_SCHEDULE = 0;
 export const PAGE_TYPE_TO_DO = 1;
 export const PAGE_TYPE_MONEY = 2;

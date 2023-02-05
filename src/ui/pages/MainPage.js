@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {AppContext} from "../../App";
 import {useNavigate} from "react-router-dom";
-import css from "./MainPage.module.css"
+import css from "./MainPage.module.css";
 import MenuComponent from "../components/MenuComponent";
 import SchedulePage from "./SchedulePage";
 import ToDoPage from "./ToDoPage";
 import MoneyPage from "./MoneyPage";
-import SettingPage from "./SettingPage";
 import DateComponent from "../components/DateComponent";
 
 import {
@@ -15,14 +14,12 @@ import {
     PAGE_TYPE_SCHEDULE,
     PAGE_TYPE_SETTING,
     PERIOD_TYPE_DAY,
-    PERIOD_TYPE_MONTH, PERIOD_TYPE_WEEK, PERIOD_TYPE_YEAR
+    PERIOD_TYPE_MONTH, PERIOD_TYPE_WEEK, PERIOD_TYPE_YEAR, POP_UP_TYPE_NONE
 } from "../../Defines";
 import useWindowDimensions from "../../WindowDimensions";
 
 function MainPage() {
-    let store = React.useContext(AppContext)
     const navigate = useNavigate();
-
 
     const [pageType, setPageType] = useState(PAGE_TYPE_MONEY);
     const [today, setToday] = useState(new Date());

@@ -1,20 +1,15 @@
 .addDiv {
     position: absolute;
-    top: -51px;
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: calc(100% + 50px);
+    height: 100%;
     background: white;
     border-radius: 1em 1em 4px 4px;
 }
 
 .backBtnRef {
-    display: flex;
-    flex-basis: 50px;
-    justify-content: left;
-    align-items: center;
-    margin-left: 4px;
+
 }
 
 .addTypeDiv {

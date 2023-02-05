@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import SendData from "../../api/SendData";
 import '../../Global.css';
@@ -35,6 +35,7 @@ import MoneyManagerComponent from "../components/MoneyManagerComponent";
 export const MoneyContext = React.createContext()
 
 function MoneyPage(props) {
+
     let navigate = useNavigate();
 
     const [moneyMenuType, setMoneyMenuType] = useState(MONEY_MENU_TYPE_USE);
@@ -435,9 +436,7 @@ function MoneyPage(props) {
                             </div>
 
                         </div> :
-                        <div>
                             <MoneyManagerComponent className={css.daySchedule} today={props.today} moneyTaskList={moneyTaskListWithFilter}/>
-                        </div>
                 }
                 <button onClick={clickAddTaskBtn} className="addTaskBtn" onMouseDown={() => {setAddTaskBtn(1); clickAddTaskBtn();}} onMouseUp={() => setAddTaskBtn(0)} onMouseLeave={() => setAddTaskBtn(0)} >
                     { addTaskBtn === 0 && <img src={moneyAddTaskBtnPath} width={64} height={64}  alt='추가'/> }
