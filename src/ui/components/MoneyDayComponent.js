@@ -2,7 +2,11 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import css from "./MoneyDayComponent.module.css";
 import DayMoneyTaskGroupList from "./DayMoneyTaskGroupList";
 import {MoneyContext} from "../pages/MoneyPage";
-import {convertDateTimeLocalToTime, convertDateTimeToString} from "../../Defines";
+import {convertDateTimeToString} from "../../Defines";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function MoneyDayComponent(props) {
 
@@ -95,12 +99,30 @@ function MoneyDayComponent(props) {
         setData();
     },[props.today, store.filterList, props.moneyTaskList]);
 
-    const graphDefaultPath = "img/graph_default.png";
+    const chartDiv = useRef();
+    const chartData = {
+        labels: [
+            'Red',
+            'Blue',
+            'Yellow'
+        ],
+        datasets: [{
+            label: 'My First Dataset',
+            data: [300, 50, 100],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+
 
     return (
         <div className={css.dayMoney}>
             <div className={css.dayMoneyStatistics}>
-                <img src={graphDefaultPath} width={128} height={128}  alt='추가'/>
+                <div ref={chartDiv}><Doughnut data={chartData} /></div>
                 <div>수입 : {store.plusMoney} </div>
                 <div>지출 : {store.minusMoney} </div>
                 <div>({store.minusMoney - store.freeMinusMoney} + {store.freeMinusMoney}) </div>

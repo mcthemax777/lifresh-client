@@ -195,7 +195,7 @@ function MoneyPage(props) {
                     if (filterList[MONEY_FILTER_TYPE_INCOME] && moneyTask.categoryType === MONEY_ADD_TYPE_PLUS) newPlusMoney += moneyTask.money;
                     else if(moneyTask.categoryType === MONEY_ADD_TYPE_MINUS) {
                         if (filterList[MONEY_FILTER_TYPE_FIXED_SPEND]) {
-                            newMinusMoney += (moneyTask.money - moneyTask.overMoney);
+                            newMinusMoney += (moneyTask.money);
                         }
                         if (filterList[MONEY_FILTER_TYPE_FREE_SPEND] && moneyTask.overMoney > 0) {
                             newFreeMinusMoney += moneyTask.overMoney;
